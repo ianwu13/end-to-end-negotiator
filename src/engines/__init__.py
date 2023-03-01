@@ -88,7 +88,7 @@ class EngineBase(object):
 
             total_loss += loss
             
-            print(ix, loss, total_loss, math.isnan(loss))
+            # print(ix, loss, total_loss, math.isnan(loss))
 
         total_loss /= len(trainset)
         time_elapsed = time.time() - start_time
@@ -111,7 +111,7 @@ class EngineBase(object):
             total_select_loss += select_loss
             total_partner_ctx_loss += partner_ctx_loss
             
-            print(ix, valid_loss, total_valid_loss)
+            # print(ix, valid_loss, total_valid_loss)
 
         # Dividing by the number of words in the input, not the tokens modeled,
         # because the latter includes padding
