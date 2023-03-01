@@ -118,14 +118,18 @@ def main():
 
     print("corpus:")
     print(vars(corpus).keys())
+    print(corpus)
     print("-"*20)
 
     print("model:")
     print(vars(model).keys())
+
+    print(model)
     print("-"*20)
 
     print("engine:")
     print(vars(engine).keys())
+    print(engine)
     print("-"*20)
 
     train_loss, valid_loss, select_loss, extra = engine.train(corpus)
