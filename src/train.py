@@ -27,11 +27,11 @@ def main():
     parser = argparse.ArgumentParser(description='training script')
     parser.add_argument('--data', type=str, default='data/negotiate',
         help='location of the data corpus')
-    parser.add_argument('--nembed_word', type=int, default=256,
+    parser.add_argument('--nembed_word', type=int, default=64,
         help='size of word embeddings')
     parser.add_argument('--nembed_ctx', type=int, default=64,
         help='size of context embeddings')
-    parser.add_argument('--nhid_lang', type=int, default=256,
+    parser.add_argument('--nhid_lang', type=int, default=64,
         help='size of the hidden state for the language module')
     parser.add_argument('--nhid_cluster', type=int, default=256,
         help='size of the hidden state for the language module')
@@ -43,7 +43,7 @@ def main():
         help='size of the hidden state for the attention module')
     parser.add_argument('--nhid_sel', type=int, default=64,
         help='size of the hidden state for the selection module')
-    parser.add_argument('--lr', type=float, default=20.0,
+    parser.add_argument('--lr', type=float, default=0.001,
         help='initial learning rate')
     parser.add_argument('--min_lr', type=float, default=1e-5,
         help='min threshold for learning rate annealing')
@@ -51,15 +51,15 @@ def main():
         help='decrease learning rate by this factor')
     parser.add_argument('--decay_every', type=int,  default=1,
         help='decrease learning rate after decay_every epochs')
-    parser.add_argument('--momentum', type=float, default=0.0,
+    parser.add_argument('--momentum', type=float, default=0.1,
         help='momentum for sgd')
     parser.add_argument('--clip', type=float, default=0.2,
         help='gradient clipping')
-    parser.add_argument('--dropout', type=float, default=0.5,
+    parser.add_argument('--dropout', type=float, default=0.1,
         help='dropout rate in embedding layer')
     parser.add_argument('--init_range', type=float, default=0.1,
         help='initialization range')
-    parser.add_argument('--max_epoch', type=int, default=30,
+    parser.add_argument('--max_epoch', type=int, default=5,
         help='max number of epochs')
     parser.add_argument('--num_clusters', type=int, default=50,
         help='number of clusters')
