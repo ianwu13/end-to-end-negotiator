@@ -5,6 +5,7 @@
 # LICENSE file in the root directory of this source tree.
 
 import torch
+import math
 from torch.autograd import Variable
 
 from engines import EngineBase, Criterion
@@ -45,10 +46,14 @@ class SelectionEngine(EngineBase):
                 loss += self.sel_crit(out, tgt)
             loss /= sel_out[0].size(0)
 
+        if math.isnan(loss.item()):
+            return loss.item()
+        
         self.opt.zero_grad()
         loss.backward()
         torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.args.clip)
         self.opt.step()
+        
         return loss.item()
 
     def valid_batch(self, batch):

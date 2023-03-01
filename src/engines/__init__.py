@@ -76,8 +76,12 @@ class EngineBase(object):
 
         print("Num batches for training: ", len(trainset))
         for ix, batch in enumerate(trainset):
-            self.t += 1
             loss = self.train_batch(batch)
+
+            if math.isnan(loss):
+                continue
+            
+            self.t += 1
 
             if self.args.visual and self.t % 100 == 0:
                 self.model_plot.update(self.t)
@@ -99,6 +103,10 @@ class EngineBase(object):
         print("Num batches for validation: ", len(validset))
         for ix, batch in enumerate(validset):
             valid_loss, select_loss, partner_ctx_loss = self.valid_batch(batch)
+
+            if math.isnan(select_loss):
+                continue
+            
             total_valid_loss += valid_loss
             total_select_loss += select_loss
             total_partner_ctx_loss += partner_ctx_loss
