@@ -74,6 +74,7 @@ class EngineBase(object):
         total_loss = 0
         start_time = time.time()
 
+        print("Num batches for training: ", len(trainset))
         for ix, batch in enumerate(trainset):
             self.t += 1
             loss = self.train_batch(batch)
@@ -94,6 +95,8 @@ class EngineBase(object):
         self.model.eval()
 
         total_valid_loss, total_select_loss, total_partner_ctx_loss = 0, 0, 0
+        
+        print("Num batches for validation: ", len(validset))
         for ix, batch in enumerate(validset):
             valid_loss, select_loss, partner_ctx_loss = self.valid_batch(batch)
             total_valid_loss += valid_loss
