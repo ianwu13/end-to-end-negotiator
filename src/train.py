@@ -115,6 +115,19 @@ def main():
     if args.cuda:
         model.cuda()
     engine = model_ty.engine_ty(model, args, verbose=True)
+
+    print("corpus:")
+    print(vars(corpus).keys())
+    print("-"*20)
+
+    print("model:")
+    print(vars(model).keys())
+    print("-"*20)
+
+    print("engine:")
+    print(vars(engine).keys())
+    print("-"*20)
+
     train_loss, valid_loss, select_loss, extra = engine.train(corpus)
 
     utils.save_model(engine.get_model(), args.model_file)
