@@ -11,7 +11,7 @@ import itertools
 import sys
 import copy
 import re
-
+import math
 import torch
 from torch import optim
 import torch.nn as nn
@@ -84,7 +84,7 @@ class EngineBase(object):
 
             total_loss += loss
             
-            print(ix, loss, total_loss)
+            print(ix, loss, total_loss, math.isnan(loss))
 
         total_loss /= len(trainset)
         time_elapsed = time.time() - start_time
