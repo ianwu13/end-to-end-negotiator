@@ -74,14 +74,14 @@ class EngineBase(object):
         total_loss = 0
         start_time = time.time()
 
-        for batch in trainset:
-            self.t += 1
-            loss = self.train_batch(batch)
+        # for batch in trainset:
+        #     self.t += 1
+        #     loss = self.train_batch(batch)
 
-            if self.args.visual and self.t % 100 == 0:
-                self.model_plot.update(self.t)
+        #     if self.args.visual and self.t % 100 == 0:
+        #         self.model_plot.update(self.t)
 
-            total_loss += loss
+        #     total_loss += loss
 
         total_loss /= len(trainset)
         time_elapsed = time.time() - start_time
