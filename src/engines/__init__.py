@@ -88,6 +88,7 @@ class EngineBase(object):
 
         total_loss /= len(trainset)
         time_elapsed = time.time() - start_time
+        print("Training is over now.")
         return total_loss, time_elapsed
 
     def valid_pass(self, validset, validset_stats):
