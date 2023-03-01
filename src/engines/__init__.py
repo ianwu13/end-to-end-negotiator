@@ -74,7 +74,7 @@ class EngineBase(object):
         total_loss = 0
         start_time = time.time()
 
-        for batch in trainset:
+        for ix, batch in enumerate(trainset):
             self.t += 1
             loss = self.train_batch(batch)
 
@@ -82,7 +82,9 @@ class EngineBase(object):
                 self.model_plot.update(self.t)
 
             total_loss += loss
-            break
+            
+            if ix > 10:
+                break
 
         total_loss /= len(trainset)
         time_elapsed = time.time() - start_time
@@ -92,12 +94,14 @@ class EngineBase(object):
         self.model.eval()
 
         total_valid_loss, total_select_loss, total_partner_ctx_loss = 0, 0, 0
-        for batch in validset:
+        for ix, batch in enumerate(validset):
             valid_loss, select_loss, partner_ctx_loss = self.valid_batch(batch)
             total_valid_loss += valid_loss
             total_select_loss += select_loss
             total_partner_ctx_loss += partner_ctx_loss
-            break
+            
+            if ix > 10:
+                break
 
         # Dividing by the number of words in the input, not the tokens modeled,
         # because the latter includes padding
