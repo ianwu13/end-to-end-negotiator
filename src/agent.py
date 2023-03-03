@@ -7,12 +7,12 @@
 import sys
 from collections import defaultdict
 
-import numpy as np
-import torch
-from torch import optim, autograd
-import torch.nn as nn
-from torch.autograd import Variable
-import torch.nn.functional as F
+import numpy as np # type: ignore
+import torch # type: ignore
+from torch import optim, autograd # type: ignore
+import torch.nn as nn # type: ignore
+from torch.autograd import Variable # type: ignore
+import torch.nn.functional as F # type: ignore
 import utils
 from dialog import DialogLogger
 import vis
