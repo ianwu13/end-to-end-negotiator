@@ -37,7 +37,7 @@ class Agent(object):
         pass
 
     def update(self, agree, reward, partner_choice):
-        pass
+        print(f"Agent update: {self.name}")
 
 
 class RnnAgent(Agent):
@@ -76,7 +76,7 @@ class RnnAgent(Agent):
 
     def update(self, agree, reward, choice=None, partner_choice=None,
             partner_input=None, max_partner_reward=None):
-        pass
+        print(f"RnnAgent update: {self.name}")
 
     def read(self, inpt):
         self.sents.append(Variable(self._encode(['THEM:'] + inpt, self.model.word_dict)))
@@ -658,7 +658,7 @@ class RnnRolloutAgent2(RnnAgent):
         self.sample_selection = sample_selection
 
     def update(self, agree, reward, choice=None, partner_choice=None, partner_input=None):
-        pass
+        print(f"RnnRolloutAgent2 update: {self.name}")
 
     def write(self, max_words):
         best_score = -9999
@@ -826,9 +826,10 @@ class RlAgent(RnnAgent):
         return choice
 
     def update(self, agree, reward, choice=None, partner_choice=None, partner_input=None, partner_reward=None):
+        print(f"RlAgent update: {self.name}")
         if not self.train:
             return
-        print("UPDATE MODEL CALLED - RlAgent")
+        
         self.t += 1
         if len(self.logprobs) == 0:
             return
@@ -897,9 +898,8 @@ class OnlineAgent(RnnRolloutAgent):
         self.no_agreements = 0
 
     def update(self, agree, reward, choice=None, partner_choice=None, partner_input=None):
+        print(f"OnlineAgent update: {self.name}")
         self.t += 1
-
-        print("UPDATE MODEL CALLED - OnlineAgent")
         if choice[0] == '<no_agreement>':
             self.no_agreements += 1
             agree = True #FIXME
@@ -1094,10 +1094,11 @@ class PredictionAgent(HierarchicalAgent):
 
 
     def update(self, agree, reward, choice=None, partner_choice=None, partner_input=None, partner_reward=None):
+        print(f"PredictionAgent update: {self.name}")
         if not self.train:
             return
         
-        print("UPDATE MODEL CALLED - PredictionAgent")
+        
         self.t += 1
         if len(self.logprobs) == 0:
             return
@@ -1689,11 +1690,11 @@ class LatentClusteringAgent(HierarchicalAgent):
 
     def update(self, agree, max_reward, choice=None, partner_choice=None,
         partner_input=None, max_partner_reward=None):
-
+        print(f"LatentClusteringAgent update: {self.name}")
         if not self.train:
             return
         
-        print("UPDATE MODEL CALLED - LatentClusteringAgent")
+        
         self.t += 1
 
         if len(self.logprobs) == 0:
@@ -2144,6 +2145,7 @@ class BaselineClusteringAgent(HierarchicalAgent):
 
     def update(self, agree, max_reward, choice=None, partner_choice=None,
         partner_input=None, max_partner_reward=None):
+        print(f"BaselineClusteringAgent update: {self.name}")
         pass
 
     def _choose(self, sample=False):
