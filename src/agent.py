@@ -828,7 +828,7 @@ class RlAgent(RnnAgent):
     def update(self, agree, reward, choice=None, partner_choice=None, partner_input=None, partner_reward=None):
         if not self.train:
             return
-
+        print("UPDATE MODEL CALLED - RlAgent")
         self.t += 1
         if len(self.logprobs) == 0:
             return
@@ -899,6 +899,7 @@ class OnlineAgent(RnnRolloutAgent):
     def update(self, agree, reward, choice=None, partner_choice=None, partner_input=None):
         self.t += 1
 
+        print("UPDATE MODEL CALLED - OnlineAgent")
         if choice[0] == '<no_agreement>':
             self.no_agreements += 1
             agree = True #FIXME
@@ -1095,6 +1096,8 @@ class PredictionAgent(HierarchicalAgent):
     def update(self, agree, reward, choice=None, partner_choice=None, partner_input=None, partner_reward=None):
         if not self.train:
             return
+        
+        print("UPDATE MODEL CALLED - PredictionAgent")
         self.t += 1
         if len(self.logprobs) == 0:
             return
@@ -1689,6 +1692,8 @@ class LatentClusteringAgent(HierarchicalAgent):
 
         if not self.train:
             return
+        
+        print("UPDATE MODEL CALLED - LatentClusteringAgent")
         self.t += 1
 
         if len(self.logprobs) == 0:
