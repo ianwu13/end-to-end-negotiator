@@ -209,8 +209,8 @@ class Dialog(object):
             j = 1 if i == 0 else 0
 
             # print(f"Call Agent update: {agent.name}")
-            agent.update(agree, reward, choice=choices[i],
-                partner_choice=choices[j], partner_input=ctxs[j], max_partner_reward=rewards[j])
+            # agent.update(agree, reward, choice=choices[i],
+            #     partner_choice=choices[j], partner_input=ctxs[j], max_partner_reward=rewards[j])
 
         if agree:
             self.metrics.record('advantage', rewards[0] - rewards[1])

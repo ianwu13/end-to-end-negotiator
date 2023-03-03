@@ -164,7 +164,7 @@ def main():
     reinforce = Reinforce(dialog, ctx_gen, args, engine, corpus, logger)
     reinforce.run()
 
-    utils.save_model(alice.model, args.output_model_file)
+    # utils.save_model(alice.model, args.output_model_file)
 
 
 if __name__ == '__main__':
