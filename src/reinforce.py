@@ -157,15 +157,19 @@ def main():
     ctx_gen = ContextGenerator(args.context_file)
 
     domain = get_domain(args.domain)
-    
-    corpus = alice_model.corpus_ty(domain, args.data, freq_cutoff=args.unk_threshold,
+
+    # corpus = alice_model.corpus_ty(domain, args.data, freq_cutoff=args.unk_threshold,
+    #     verbose=True, sep_sel=args.sep_sel)
+    # engine = alice_model.engine_ty(alice_model, args)
+
+    corpus = bob_model.corpus_ty(domain, args.data, freq_cutoff=args.unk_threshold,
         verbose=True, sep_sel=args.sep_sel)
-    engine = alice_model.engine_ty(alice_model, args)
+    engine = bob_model.engine_ty(bob_model, args)
 
     reinforce = Reinforce(dialog, ctx_gen, args, engine, corpus, logger)
     reinforce.run()
 
-    utils.save_model(alice.model, args.output_model_file)
+    # utils.save_model(alice.model, args.output_model_file)
 
 
 if __name__ == '__main__':
