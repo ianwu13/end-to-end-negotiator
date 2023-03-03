@@ -42,12 +42,12 @@ class Reinforce(object):
         for ctxs in self.ctx_gen.iter(self.args.nepoch):
             print(f"cxt no: {n}")
             n += 1
-            # if self.args.sv_train_freq > 0 and n % self.args.sv_train_freq == 0:
-            #     print(f"sv cxt no: {n}")
-            #     batch = random.choice(trainset)
-            #     self.engine.model.train()
-            #     self.engine.train_batch(batch)
-            #     self.engine.model.eval()
+            if self.args.sv_train_freq > 0 and n % self.args.sv_train_freq == 0:
+                print(f"sv cxt no: {n}")
+                batch = random.choice(trainset)
+                self.engine.model.train()
+                self.engine.train_batch(batch)
+                self.engine.model.eval()
 
             self.logger.dump('=' * 80)
             self.dialog.run(ctxs, self.logger)
