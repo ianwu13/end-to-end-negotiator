@@ -54,17 +54,17 @@ class Reinforce(object):
             if n % 100 == 0:
                 self.logger.dump('%d: %s' % (n, self.dialog.show_metrics()), forced=True)
 
-        def dump_stats(dataset, stats, name):
-            loss, select_loss = self.engine.valid_pass(N, dataset, stats)
-            self.logger.dump('final: %s_loss %.3f %s_ppl %.3f' % (
-                name, float(loss), name, np.exp(float(loss))),
-                forced=True)
-            self.logger.dump('final: %s_select_loss %.3f %s_select_ppl %.3f' % (
-                name, float(select_loss), name, np.exp(float(select_loss))),
-                forced=True)
+        # def dump_stats(dataset, stats, name):
+        #     loss, select_loss = self.engine.valid_pass(N, dataset, stats)
+        #     self.logger.dump('final: %s_loss %.3f %s_ppl %.3f' % (
+        #         name, float(loss), name, np.exp(float(loss))),
+        #         forced=True)
+        #     self.logger.dump('final: %s_select_loss %.3f %s_select_ppl %.3f' % (
+        #         name, float(select_loss), name, np.exp(float(select_loss))),
+        #         forced=True)
 
-        dump_stats(trainset, trainset_stats, 'train')
-        dump_stats(validset, validset_stats, 'valid')
+        # dump_stats(trainset, trainset_stats, 'train')
+        # dump_stats(validset, validset_stats, 'valid')
 
         self.logger.dump('final: %s' % self.dialog.show_metrics(), forced=True)
 
