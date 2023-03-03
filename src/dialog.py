@@ -207,6 +207,8 @@ class Dialog(object):
         for i, (agent, reward) in enumerate(zip(self.agents, rewards)):
             logger.dump_reward(agent.name, agree, reward)
             j = 1 if i == 0 else 0
+
+            print(f"Updating agent: {agent.name}")
             agent.update(agree, reward, choice=choices[i],
                 partner_choice=choices[j], partner_input=ctxs[j], max_partner_reward=rewards[j])
 
