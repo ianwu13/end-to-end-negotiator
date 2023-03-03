@@ -42,12 +42,12 @@ class Reinforce(object):
         for ctxs in self.ctx_gen.iter(self.args.nepoch):
             print(f"cxt no: {n}")
             n += 1
-            if self.args.sv_train_freq > 0 and n % self.args.sv_train_freq == 0:
-                print(f"sv cxt no: {n}")
-                batch = random.choice(trainset)
-                self.engine.model.train()
-                self.engine.train_batch(batch)
-                self.engine.model.eval()
+            # if self.args.sv_train_freq > 0 and n % self.args.sv_train_freq == 0:
+            #     print(f"sv cxt no: {n}")
+            #     batch = random.choice(trainset)
+            #     self.engine.model.train()
+            #     self.engine.train_batch(batch)
+            #     self.engine.model.eval()
 
             self.logger.dump('=' * 80)
             self.dialog.run(ctxs, self.logger)
@@ -158,13 +158,9 @@ def main():
 
     domain = get_domain(args.domain)
 
-    # corpus = alice_model.corpus_ty(domain, args.data, freq_cutoff=args.unk_threshold,
-    #     verbose=True, sep_sel=args.sep_sel)
-    # engine = alice_model.engine_ty(alice_model, args)
-
-    corpus = bob_model.corpus_ty(domain, args.data, freq_cutoff=args.unk_threshold,
+    corpus = alice_model.corpus_ty(domain, args.data, freq_cutoff=args.unk_threshold,
         verbose=True, sep_sel=args.sep_sel)
-    engine = bob_model.engine_ty(bob_model, args)
+    engine = alice_model.engine_ty(alice_model, args)
 
     reinforce = Reinforce(dialog, ctx_gen, args, engine, corpus, logger)
     reinforce.run()
