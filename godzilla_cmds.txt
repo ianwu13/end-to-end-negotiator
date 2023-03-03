@@ -7,4 +7,4 @@ CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=6 python train.py --cuda --bsz 2 --m
 
 CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=6 python selfplay.py --cuda --alice_model_file rnn_model.th --bob_model_file rnn_model.th --context_file data/negotiate/selfplay.txt  --verbose --temperature 0.5 --selection_model_file selection_model.th
 
-CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python reinforce.py --cuda --alice_model_file rnn_model.th --bob_model_file rnn_model.th --output_model_file rnn_rl_model.th --context_file data/negotiate/selfplay_dummy.txt  --temperature 0.5 --log_file rnn_rl.log --sv_train_freq 4 --nepoch 1 --selection_model_file selection_model.th  --rl_lr 0.00001 --rl_clip 0.0001 --sep_sel
+CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python reinforce.py --cuda --alice_model_file rnn_model.th --bob_model_file rnn_model.th --output_model_file rnn_rl_model.th --context_file data/negotiate/selfplay_dummy.txt  --temperature 0.5 --log_file rnn_rl.log --sv_train_freq 4 --nepoch 1 --selection_model_file selection_model.th  --rl_lr 0.00001 --rl_clip 0.0001 --sep_sel --verbose

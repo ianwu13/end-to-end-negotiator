@@ -43,6 +43,7 @@ class Reinforce(object):
             print(f"cxt no: {n}")
             n += 1
             if self.args.sv_train_freq > 0 and n % self.args.sv_train_freq == 0:
+                print(f"sv cxt no: {n}")
                 batch = random.choice(trainset)
                 self.engine.model.train()
                 self.engine.train_batch(batch)
