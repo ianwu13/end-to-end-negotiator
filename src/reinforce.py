@@ -145,7 +145,7 @@ def main():
 
     alice_model = utils.load_model(args.alice_model_file)
     alice_ty = get_agent_type(alice_model)
-    alice = alice_ty(alice_model, args, name='Alice', train=False) # True
+    alice = alice_ty(alice_model, args, name='Alice', train=True) # True
     # alice.vis = args.visual
 
     bob_model = utils.load_model(args.bob_model_file)
