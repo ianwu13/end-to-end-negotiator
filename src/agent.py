@@ -76,7 +76,8 @@ class RnnAgent(Agent):
 
     def update(self, agree, reward, choice=None, partner_choice=None,
             partner_input=None, max_partner_reward=None):
-        print(f"RnnAgent update: {self.name}")
+        # print(f"RnnAgent update: {self.name}")
+        pass
 
     def read(self, inpt):
         self.sents.append(Variable(self._encode(['THEM:'] + inpt, self.model.word_dict)))
