@@ -40,6 +40,7 @@ class Reinforce(object):
 
         n = 0
         for ctxs in self.ctx_gen.iter(self.args.nepoch):
+            print(f"cxt no: {n}")
             n += 1
             if self.args.sv_train_freq > 0 and n % self.args.sv_train_freq == 0:
                 batch = random.choice(trainset)
