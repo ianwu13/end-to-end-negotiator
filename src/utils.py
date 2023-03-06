@@ -33,7 +33,10 @@ def save_model(model, file_name):
 def load_model(file_name):
     """Reads model from a file."""
     with open(file_name, 'rb') as f:
-        return torch.load(f)
+        if torch.cuda.is_available():
+            return torch.load(f)
+        else:
+            return torch.load(f, map_location=torch.device("cpu"))
 
 
 def set_seed(seed):
