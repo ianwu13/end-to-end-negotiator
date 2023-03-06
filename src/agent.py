@@ -331,8 +331,12 @@ class RlAgent(LstmAgent):
         self.logprobs = []
 
     def write(self):
-        logprobs, outs, self.lang_h, lang_hs = self.model.write(self.lang_h, self.ctx_h,
-            100, self.args.temperature)
+        try:
+            logprobs, outs, self.lang_h, lang_hs = self.model.write(self.lang_h, self.ctx_h,
+                100, self.args.temperature)
+        except RuntimeError:
+            # catch Nans; signal upstream
+            return None
         # append log probs from the generated words
         self.logprobs.extend(logprobs)
         self.lang_hs.append(lang_hs)

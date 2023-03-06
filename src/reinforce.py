@@ -50,13 +50,21 @@ class Reinforce(object):
         n = 0
         for ctxs in self.ctx_gen.iter(self.args.nepoch):
             n += 1
+            print(f"Num: {n}")
             # supervised update
             if self.args.sv_train_freq > 0 and n % self.args.sv_train_freq == 0:
                 self.engine.train_single(N, trainset)
 
             self.logger.dump('=' * 80)
             # run dialogue, it is responsible for reinforcing the agents
-            self.dialog.run(ctxs, self.logger)
+            
+            conv, _, _  = self.dialog.run(ctxs, self.logger)
+            
+            # handle nans; failure mode.
+            if not conv:
+                print("Failure mode; continue to new contexts.")
+                continue
+                
             self.logger.dump('=' * 80)
             self.logger.dump('')
             if n % 100 == 0:
