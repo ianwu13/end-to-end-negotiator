@@ -146,6 +146,57 @@ class ObjectDivisionDomain(Domain):
             return 0
 
     def score_choices(self, choices, ctxs):
+        """
+        modified implementation:
+            the conversation ends with a selection token or when max. number of utterances have been reached.
+            if the conv. does not end in max turns - > 0 reward
+            if the two outputs are numbers and exactly the same, -> positive reward
+            if the two outputs are numbers and don’t match or one of them is no agreement - > they don’t match - > ignore this scenario = modeling failure.
+            if the two outputs are no agreements and match -> 0 rewards.
+        """
+        assert len(choices) == len(ctxs)
+        print(choices)
+        print(ctxs)
+        
+        if choices[0][0] == "<no_agreement>":
+            for item in choices[0]:
+                assert item == "<no_agreement>"
+
+        if choices[1][0] == "<no_agreement>":
+            for item in choices[1]:
+                assert item == "<no_agreement>"
+        
+        
+        if (choices[0][0] == "<no_agreement>" and choices[1][0] != "<no_agremeent>") or (choices[1][0] == "<no_agreement>" and choices[0][0] != "<no_agremeent>"):
+            # failure mode; this case must simply be ignored.
+            return None, None
+        
+        if (choices[0][0] == "<no_agreement>" and choices[1][0] == "<no_agremeent>"):
+            # both reach no agreement -> there is no agreement; give 0 rewards.
+            return False, 0
+        
+        # at this point - both outputs are numbers only- if they match we give positive reward. if they don't, we ignore.            
+
+        cnts = [int(x) for x in ctxs[0][0::2]]
+        agree, scores = True, [0 for _ in range(len(ctxs))]
+        for i, n in enumerate(cnts):
+            for agent_id, (choice, ctx) in enumerate(zip(choices, ctxs)):
+                taken = self._to_int(choice[i][-1])
+                assert taken == int(choice[i][-1])
+                n -= taken
+                scores[agent_id] += int(ctx[2 * i + 1]) * taken
+            agree = agree and (n == 0)
+        return agree, scores
+    
+    def score_choices_old(self, choices, ctxs):
+        """
+        This is the lewis et al implementation: 
+            the conversation ends with a selection token (and no max utterances looks like)
+            if the two outputs are numbers and exactly the same, -> positive reward
+            if the two outputs are numbers but convey different deals -> agree = False -> reward = 0
+            if the two outputs are no agreements and match -> agree will be false -> reward = 0
+            if one of the outputs is no agreements and one is numbers, they likely won’t match or even if they match - > likely the final reward = 0 ..since likely that agree will be 0..even if agree is not 0, likely that the reward computed for rl model will be 0 so it wont matter.. the only case this hurts is when the rl model still outputs a deal with all max counts..which is unlikely to happen.
+        """
         assert len(choices) == len(ctxs)
         cnts = [int(x) for x in ctxs[0][0::2]]
         agree, scores = True, [0 for _ in range(len(ctxs))]
