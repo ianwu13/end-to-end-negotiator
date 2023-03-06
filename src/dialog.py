@@ -195,7 +195,14 @@ class Dialog(object):
 
         # evaluate the choices, produce agreement and a reward
         agree, rewards = self.domain.score_choices(choices, ctxs)
+        
+        if not agree and not rewards:
+            # this is neither an agreement, nor a disagreement - we don't know due to model failure.
+            print("Failure mode. - agree and rewards are both None. Ignoring this case.")
+            return None, None, None
+
         logger.dump('-' * 80)
+
         logger.dump_agreement(agree)
         # perform update, in case if any of the agents is learnable
         for agent, reward in zip(self.agents, rewards):

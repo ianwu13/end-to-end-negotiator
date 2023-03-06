@@ -155,8 +155,6 @@ class ObjectDivisionDomain(Domain):
             if the two outputs are no agreements and match -> 0 rewards.
         """
         assert len(choices) == len(ctxs)
-        print(choices)
-        print(ctxs)
         
         if choices[0][0] == "<no_agreement>":
             for item in choices[0]:
@@ -165,7 +163,6 @@ class ObjectDivisionDomain(Domain):
         if choices[1][0] == "<no_agreement>":
             for item in choices[1]:
                 assert item == "<no_agreement>"
-        
         
         if (choices[0][0] == "<no_agreement>" and choices[1][0] != "<no_agremeent>") or (choices[1][0] == "<no_agreement>" and choices[0][0] != "<no_agremeent>"):
             # failure mode; this case must simply be ignored.
@@ -186,6 +183,12 @@ class ObjectDivisionDomain(Domain):
                 n -= taken
                 scores[agent_id] += int(ctx[2 * i + 1]) * taken
             agree = agree and (n == 0)
+        
+        if not agree:
+            # this is again a failure mode - this just does not mean disagreement
+            return None, None
+
+        # no failures, positive outputs - same from both sides.
         return agree, scores
     
     def score_choices_old(self, choices, ctxs):
