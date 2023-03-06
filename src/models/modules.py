@@ -49,8 +49,9 @@ class CudaModule(nn.Module):
         self.device_id = device_id
 
     def to_device(self, m):
-        if self.device_id is not None:
-            return m.cuda(self.device_id)
+        if torch.cuda.is_available():
+            if self.device_id is not None:
+                return m.cuda(self.device_id)
         return m
 
 
