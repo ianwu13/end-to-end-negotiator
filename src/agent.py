@@ -85,8 +85,10 @@ class LstmAgent(Agent):
         dictionary: prebuild mapping, see Dictionary in data.py
         """
         encoded = torch.LongTensor(dictionary.w2i(inpt)).unsqueeze(1)
-        if self.model.device_id is not None:
-            encoded = encoded.cuda(self.model.device_id)
+        
+        if torch.cuda.is_available():
+            if self.model.device_id is not None:
+                encoded = encoded.cuda(self.model.device_id)
         return encoded
 
     def _decode(self, out, dictionary):
