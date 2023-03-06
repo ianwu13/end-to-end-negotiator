@@ -53,5 +53,5 @@ rl_bsz = 25
 rl_sv_train_freq = 4
 rl_nepoch = 4
 rl_score_threshold= 6
-verbose = True
+verbose = False
 rl_temperature = 0.1
