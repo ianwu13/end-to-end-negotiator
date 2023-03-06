@@ -155,9 +155,6 @@ class ObjectDivisionDomain(Domain):
             if the two outputs are no agreements and match -> 0 rewards.
         """
         assert len(choices) == len(ctxs)
-        
-        print(choices)
-        print(ctxs)
 
         if choices[0][0] == "<no_agreement>":
             for item in choices[0]:
