@@ -100,7 +100,6 @@ def main():
 
     bob_model = utils.load_model(args.bob_model_file)
 
-    print(alice_model.device, bob_model.device)
     bob_ty = get_agent_type(bob_model, args.smart_bob, args.fast_rollout)
     bob = bob_ty(bob_model, args, name='Bob')
 
