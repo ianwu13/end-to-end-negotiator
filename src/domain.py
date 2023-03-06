@@ -167,11 +167,11 @@ class ObjectDivisionDomain(Domain):
             for item in choices[1]:
                 assert item == "<no_agreement>"
         
-        if (choices[0][0] == "<no_agreement>" and choices[1][0] != "<no_agremeent>") or (choices[1][0] == "<no_agreement>" and choices[0][0] != "<no_agremeent>"):
+        if (choices[0][0] == "<no_agreement>" and choices[1][0] != "<no_agreement>") or (choices[1][0] == "<no_agreement>" and choices[0][0] != "<no_agreement>"):
             # failure mode; this case must simply be ignored.
             return -1, -1
         
-        if (choices[0][0] == "<no_agreement>" and choices[1][0] == "<no_agremeent>"):
+        if (choices[0][0] == "<no_agreement>" and choices[1][0] == "<no_agreement>"):
             # both reach no agreement -> there is no agreement; give 0 rewards.
             return False, 0
         
