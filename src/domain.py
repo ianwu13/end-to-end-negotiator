@@ -156,6 +156,9 @@ class ObjectDivisionDomain(Domain):
         """
         assert len(choices) == len(ctxs)
         
+        print(choices)
+        print(ctxs)
+
         if choices[0][0] == "<no_agreement>":
             for item in choices[0]:
                 assert item == "<no_agreement>"
@@ -166,7 +169,7 @@ class ObjectDivisionDomain(Domain):
         
         if (choices[0][0] == "<no_agreement>" and choices[1][0] != "<no_agremeent>") or (choices[1][0] == "<no_agreement>" and choices[0][0] != "<no_agremeent>"):
             # failure mode; this case must simply be ignored.
-            return None, None
+            return -1, -1
         
         if (choices[0][0] == "<no_agreement>" and choices[1][0] == "<no_agremeent>"):
             # both reach no agreement -> there is no agreement; give 0 rewards.
@@ -186,7 +189,7 @@ class ObjectDivisionDomain(Domain):
         
         if not agree:
             # this is again a failure mode - this just does not mean disagreement
-            return None, None
+            return -1, -1
 
         # no failures, positive outputs - same from both sides.
         return agree, scores

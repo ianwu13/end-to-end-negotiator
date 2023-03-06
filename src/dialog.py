@@ -196,7 +196,7 @@ class Dialog(object):
         # evaluate the choices, produce agreement and a reward
         agree, rewards = self.domain.score_choices(choices, ctxs)
         
-        if not agree and not rewards:
+        if agree == -1 and rewards == -1:
             # this is neither an agreement, nor a disagreement - we don't know due to model failure.
             print("Failure mode. - agree and rewards are both None. Ignoring this case.")
             return None, None, None
