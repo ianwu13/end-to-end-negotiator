@@ -173,7 +173,8 @@ class ObjectDivisionDomain(Domain):
         
         if (choices[0][0] == "<no_agreement>" and choices[1][0] == "<no_agreement>"):
             # both reach no agreement -> there is no agreement; give 0 rewards.
-            return False, 0
+            agree, scores = False, [0 for _ in range(len(ctxs))]
+            return agree, scores
         
         # at this point - both outputs are numbers only- if they match we give positive reward. if they don't, we ignore.            
 
