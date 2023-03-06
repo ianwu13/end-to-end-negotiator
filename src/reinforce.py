@@ -58,12 +58,7 @@ class Reinforce(object):
             self.logger.dump('=' * 80)
             # run dialogue, it is responsible for reinforcing the agents
             
-            conv, _, _  = self.dialog.run(ctxs, self.logger)
-            
-            # handle nans; failure mode.
-            if not conv:
-                print("Failure mode; continue to new contexts.")
-                continue
+            self.dialog.run(ctxs, self.logger)
                 
             self.logger.dump('=' * 80)
             self.logger.dump('')
@@ -175,7 +170,10 @@ def main():
 
     logging.info("Starting Reinforcement Learning")
     reinforce = Reinforce(dialog, ctx_gen, args, engine, corpus, logger)
-    reinforce.run()
+    try:
+        reinforce.run()
+    except RuntimeError:
+        print("runtime error caught !!!")
 
     logging.info("Saving updated Alice model to %s" % (args.output_model_file))
     utils.save_model(alice.model, args.output_model_file)

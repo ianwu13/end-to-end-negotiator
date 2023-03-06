@@ -169,10 +169,6 @@ class Dialog(object):
             # produce an utterance
             out = writer.write()
 
-            if not out:
-                #some failure mode; just return from this entire iteration and go back; choose new cxts.
-                return None, None, None
-
             self.metrics.record('sent_len', len(out))
             self.metrics.record('full_match', out)
             self.metrics.record('%s_unique' % writer.name, out)
