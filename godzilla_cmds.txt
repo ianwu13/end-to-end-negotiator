@@ -22,4 +22,4 @@ v2
 
 Decrease the reward further for no agreement case.
 
-Separate out the outcome prediction model - keep track of failure cases...keep track of the outcome prediction points and confidence and entropy.
+Is the outcome prediction model separate already in the next paper? how is agreement disagreement defined in that work? Separate out the outcome prediction model - keep track of failure cases...keep track of the outcome prediction points and confidence and entropy.

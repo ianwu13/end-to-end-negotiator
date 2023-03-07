@@ -115,7 +115,7 @@ class DialogSelfTrainLogger(DialogLogger):
 
 class Dialog(object):
     """Dialogue runner."""
-    def __init__(self, agents, args):
+    def __init__(self, agents, args, scale_rw = 1.0):
         # for now we only suppport dialog of 2 agents
         assert len(agents) == 2
         self.agents = agents
@@ -123,6 +123,7 @@ class Dialog(object):
         self.domain = domain.get_domain(args.domain)
         self.metrics = MetricsContainer()
         self._register_metrics()
+        self.scale_rw = scale_rw
 
     def _register_metrics(self):
         """Registers valuable metrics."""
@@ -212,7 +213,7 @@ class Dialog(object):
         for agent, reward in zip(self.agents, rewards):
             logger.dump_reward(agent.name, agree, reward)
             logging.debug("%s : %s : %s" % (str(agent.name), str(agree), str(rewards)))
-            agent.update(agree, reward, scale_rw = self.args.scale_rw)
+            agent.update(agree, reward, scale_rw = self.scale_rw)
 
         if agree:
             self.metrics.record('advantage', rewards[0] - rewards[1])

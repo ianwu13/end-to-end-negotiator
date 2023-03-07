@@ -162,7 +162,7 @@ def main():
     bob = bob_ty(bob_model, args, name='Bob')
 
     logging.info("Initializing communication dialogue between Alice and Bob")
-    dialog = Dialog([alice, bob], args)
+    dialog = Dialog([alice, bob], args, scale_rw=args.scale_rw)
     logger = DialogLogger(verbose=args.verbose, log_file=args.log_file)
     ctx_gen = ContextGenerator(args.context_file)
 
