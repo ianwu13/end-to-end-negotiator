@@ -56,4 +56,4 @@ rl_score_threshold= 6
 verbose = False
 rl_temperature = 0.1
 scale_rw = 1.0
-rw_type = "own_points" # in ["own_points", "partner_points", "self_adv", "partner_adv", "combine75_25", "combine25_75"]
+rw_type = "own_points" # in ["own_points", "partner_points", "self_adv", "partner_adv", "combine75_25", "combine25_75", "combine50-50"]

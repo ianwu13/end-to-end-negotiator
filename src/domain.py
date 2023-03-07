@@ -223,6 +223,18 @@ class ObjectDivisionDomain(Domain):
 
             return agree, partner_adv_scores
         
+        if rw_type == "combine50_50":
+            scores = scores[:]
+            rev_scores = scores[::-1]
+
+            # comb scores with equal weightage.
+            equal_comb_scores = []
+            for s, rs in zip(scores, rev_scores):
+                comb = 0.5*s + 0.5*rs
+                equal_comb_scores.append(comb)
+
+            return agree, equal_comb_scores
+
         if rw_type == "combine75_25":
             scores = scores[:]
             rev_scores = scores[::-1]
