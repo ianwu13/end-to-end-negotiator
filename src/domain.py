@@ -205,8 +205,7 @@ class ObjectDivisionDomain(Domain):
 
             self_adv_scores = []
             for s, rs in zip(scores, rev_scores):
-                adv = (s - rs)
-                adv += 10 # offset to keep all scores positive.
+                adv = max([0.0, s - rs])
                 self_adv_scores.append(adv)
 
             return agree, self_adv_scores
@@ -217,8 +216,7 @@ class ObjectDivisionDomain(Domain):
 
             partner_adv_scores = []
             for s, rs in zip(scores, rev_scores):
-                adv = (rs - s)
-                adv += 10 # offset to keep all scores positive.
+                adv = max([0.0, rs - s])
                 partner_adv_scores.append(adv)
 
             return agree, partner_adv_scores
