@@ -198,6 +198,54 @@ class ObjectDivisionDomain(Domain):
         if rw_type == "partner_points":
             scores.reverse()
             return agree, scores
+
+        if rw_type == "self_adv":
+            scores = scores[:]
+            rev_scores = scores[::-1]
+
+            self_adv_scores = []
+            for s, rs in zip(scores, rev_scores):
+                adv = (s - rs)
+                adv += 10 # offset to keep all scores positive.
+                self_adv_scores.append(adv)
+
+            return agree, self_adv_scores
+        
+        if rw_type == "partner_adv":
+            scores = scores[:]
+            rev_scores = scores[::-1]
+
+            partner_adv_scores = []
+            for s, rs in zip(scores, rev_scores):
+                adv = (rs - s)
+                adv += 10 # offset to keep all scores positive.
+                partner_adv_scores.append(adv)
+
+            return agree, partner_adv_scores
+        
+        if rw_type == "combine75_25":
+            scores = scores[:]
+            rev_scores = scores[::-1]
+
+            # comb scores inclined towards the self.
+            self_comb_scores = []
+            for s, rs in zip(scores, rev_scores):
+                comb = 0.75*s + 0.25*rs
+                self_comb_scores.append(comb)
+
+            return agree, self_comb_scores
+        
+        if rw_type == "combine25_75":
+            scores = scores[:]
+            rev_scores = scores[::-1]
+
+            # comb scores inclined towards the partner
+            partner_comb_scores = []
+            for s, rs in zip(scores, rev_scores):
+                comb = 0.25*s + 0.75*rs
+                partner_comb_scores.append(comb)
+
+            return agree, partner_comb_scores
         
         raise ValueError
     
