@@ -125,8 +125,6 @@ def main():
         help='RL learning rate')
     parser.add_argument('--rl_clip', type=float, default=config.rl_reinforcement_clip,
         help='RL gradient clip')
-    parser.add_argument('--scale_rw', type=float, default=config.scale_rw,
-        help='Scale RL reward')
     parser.add_argument('--ref_text', type=str,
         help='file with the reference text')
     parser.add_argument('--bsz', type=int, default=config.rl_bsz,
@@ -139,6 +137,13 @@ def main():
         help='plot graphs')
     parser.add_argument('--domain', type=str, default=config.domain,
         help='domain for the dialogue')
+    
+    # kc args
+    parser.add_argument('--scale_rw', type=float, default=config.scale_rw,
+        help='Scale RL reward')
+    parser.add_argument('--rw_type', type=str, default=config.rw_type,
+        help='reward type for the reinforce model.')
+    
     args = parser.parse_args()
 
     device_id = utils.use_cuda(args.cuda)
@@ -162,7 +167,7 @@ def main():
     bob = bob_ty(bob_model, args, name='Bob')
 
     logging.info("Initializing communication dialogue between Alice and Bob")
-    dialog = Dialog([alice, bob], args, scale_rw=args.scale_rw)
+    dialog = Dialog([alice, bob], args, scale_rw=args.scale_rw, rw_type=args.rw_type)
     logger = DialogLogger(verbose=args.verbose, log_file=args.log_file)
     ctx_gen = ContextGenerator(args.context_file)
 

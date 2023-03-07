@@ -56,3 +56,4 @@ rl_score_threshold= 6
 verbose = False
 rl_temperature = 0.1
 scale_rw = 1.0
+rw_type = "own_points" # in ["own_points", "opp_points"]

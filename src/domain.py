@@ -145,7 +145,7 @@ class ObjectDivisionDomain(Domain):
         except:
             return 0
 
-    def score_choices(self, choices, ctxs):
+    def score_choices(self, choices, ctxs, rw_type="own_points"):
         """
         modified implementation:
             the conversation ends with a selection token or when max. number of utterances have been reached.
@@ -153,6 +153,8 @@ class ObjectDivisionDomain(Domain):
             if the two outputs are numbers and exactly the same, -> positive reward
             if the two outputs are numbers and don’t match or one of them is no agreement - > they don’t match - > ignore this scenario = modeling failure.
             if the two outputs are no agreements and match -> 0 rewards.
+
+        rw_type: type of the reward in ["own_points", "partner_points"]
         """
         assert len(choices) == len(ctxs)
 
@@ -190,7 +192,14 @@ class ObjectDivisionDomain(Domain):
             return -1, -1
 
         # no failures, positive outputs - same from both sides.
-        return agree, scores
+        if rw_type == "own_points":
+            return agree, scores
+        
+        if rw_type == "partner_points":
+            scores.reverse()
+            return agree, scores
+        
+        raise ValueError
     
     def score_choices_old(self, choices, ctxs):
         """
