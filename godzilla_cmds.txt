@@ -9,8 +9,17 @@ CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=6 python selfplay.py --alice_model_f
 CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=9 python reinforce.py --data data/negotiate --bsz 16 --clip 1 --context_file data/negotiate/selfplay.txt --eps 0.0 --gamma 0.95 --lr 0.5 --momentum 0.1 --nepoch 4 --nesterov --ref_text data/negotiate/train.txt --rl_clip 1 --rl_lr 0.2 --score_threshold 6 --sv_train_freq 4 --temperature 0.5 --alice_model sv_model.th --bob_model sv_model.th --output_model_file rl_model.th
 
 
-corrected rl - 
+corrected rl - v1
 
 basically uses the corrected score_choices pipeline. where whenever the outputs of the two models mismatch - that is considered as a failure case, rather than a disagreement. this is just noisy.
 
 The actual disagreement is the case where the models fail to come to an agreement - no_agreement -> in which case the models receive a reward of 0. - you can also make it -100 or something to give a high negative to such a behavior.
+
+
+there is interesting promise - v1 ends the conversation. v1 vs v2 direct comparison doesn't make sense..only do it when comparing to a 3rd group - so compared to 3rd group and v1 is better across multiple metrics like joint value, etc.
+
+v2
+
+Decrease the reward further for no agreement case.
+
+Separate out the outcome prediction model - keep track of failure cases...keep track of the outcome prediction points and confidence and entropy.

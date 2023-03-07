@@ -59,7 +59,7 @@ class Agent(object):
         """Call it after the conversation is over, to make the selection."""
         pass
 
-    def update(self, agree, reward):
+    def update(self, agree, reward, scale_rw = 1.0):
         """After end of each dialogue the reward will be passed back to update the parameters.
 
         agree: a boolean flag that specifies if the agents agreed on the deal.
@@ -352,7 +352,7 @@ class RlAgent(LstmAgent):
             self.logprobs.append(logprob)
         return choice
 
-    def update(self, agree, reward):
+    def update(self, agree, reward, scale_rw = 1.0):
         self.t += 1
         reward = reward if agree else 0
         self.all_rewards.append(reward)
@@ -368,7 +368,7 @@ class RlAgent(LstmAgent):
         loss = 0
         # estimate the loss using one MonteCarlo rollout
         for lp, r in zip(self.logprobs, rewards):
-            loss -= lp * r
+            loss -= lp * r * scale_rw
 
         self.opt.zero_grad()
         loss.backward()

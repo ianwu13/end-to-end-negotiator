@@ -212,7 +212,7 @@ class Dialog(object):
         for agent, reward in zip(self.agents, rewards):
             logger.dump_reward(agent.name, agree, reward)
             logging.debug("%s : %s : %s" % (str(agent.name), str(agree), str(rewards)))
-            agent.update(agree, reward)
+            agent.update(agree, reward, scale_rw = self.args.scale_rw)
 
         if agree:
             self.metrics.record('advantage', rewards[0] - rewards[1])

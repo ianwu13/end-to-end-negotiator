@@ -125,6 +125,8 @@ def main():
         help='RL learning rate')
     parser.add_argument('--rl_clip', type=float, default=config.rl_reinforcement_clip,
         help='RL gradient clip')
+    parser.add_argument('--scale_rw', type=float, default=config.scale_rw,
+        help='Scale RL reward')
     parser.add_argument('--ref_text', type=str,
         help='file with the reference text')
     parser.add_argument('--bsz', type=int, default=config.rl_bsz,
