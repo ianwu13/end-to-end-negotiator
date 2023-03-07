@@ -177,12 +177,12 @@ def main():
 
     logging.info("Starting Reinforcement Learning")
     reinforce = Reinforce(dialog, ctx_gen, args, engine, corpus, logger)
-    # try:
-    #     reinforce.run()
-    # except RuntimeError:
-    #     print("runtime error caught !!!")
+    try:
+        reinforce.run()
+    except RuntimeError:
+        print("runtime error caught !!!")
 
-    reinforce.run()
+    # reinforce.run()
 
     logging.info("Saving updated Alice model to %s" % (args.output_model_file))
     utils.save_model(alice.model, args.output_model_file)
