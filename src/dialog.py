@@ -167,7 +167,9 @@ class Dialog(object):
         # reset metrics
         self.metrics.reset()
 
-        while True:
+        max_utts = 20
+        curr = 0
+        while curr < max_utts:
             # produce an utterance
             out = writer.write()
 
@@ -188,15 +190,23 @@ class Dialog(object):
                 break
             writer, reader = reader, writer
 
-        choices = []
-        # generate choices for each of the agents
-        for agent in self.agents:
-            choice = agent.choose()
-            choices.append(choice)
-            logger.dump_choice(agent.name, choice[: self.domain.selection_length() // 2])
+            curr += 1
 
-        # evaluate the choices, produce agreement and a reward
-        agree, rewards = self.domain.score_choices(choices, ctxs, rw_type=self.rw_type)
+        if not self._is_selection(conv[-1]):
+            # the conversation did not finish; assume disagreement.
+            assert curr == max_utts, curr
+            agree, rewards = False, [0 for _ in range(len(ctxs))]
+        else:
+            # the conversation atleast finished nicely; now we try to get a consistent output.
+            choices = []
+            # generate choices for each of the agents
+            for agent in self.agents:
+                choice = agent.choose()
+                choices.append(choice)
+                logger.dump_choice(agent.name, choice[: self.domain.selection_length() // 2])
+
+            # evaluate the choices, produce agreement and a reward
+            agree, rewards = self.domain.score_choices(choices, ctxs, rw_type=self.rw_type)
         
         if agree == -1 and rewards == -1:
             # this is neither an agreement, nor a disagreement - we don't know due to model failure.
