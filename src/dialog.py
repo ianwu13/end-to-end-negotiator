@@ -192,13 +192,18 @@ class Dialog(object):
 
             curr += 1
 
+        choices = []
         if not self._is_selection(conv[-1]):
             # the conversation did not finish; assume disagreement.
             assert curr == max_utts, curr
             agree, rewards = False, [0 for _ in range(len(ctxs))]
+
+            choices = [
+                ["<no_agreement>", "<no_agreement>", "<no_agreement>"],
+                ["<no_agreement>", "<no_agreement>", "<no_agreement>"],
+            ]
         else:
             # the conversation atleast finished nicely; now we try to get a consistent output.
-            choices = []
             # generate choices for each of the agents
             for agent in self.agents:
                 choice = agent.choose()
