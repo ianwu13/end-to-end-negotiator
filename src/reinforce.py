@@ -96,7 +96,7 @@ class Reinforce(object):
 
 def main():
     global global_counter
-    
+
     parser = argparse.ArgumentParser(description='Reinforce')
     parser.add_argument('--data', type=str, default=config.data_dir,
         help='location of the data corpus')
@@ -249,7 +249,7 @@ def main():
             except RuntimeError:
                 print("runtime error caught !!!")
 
-            if global_counter >= 10000:
+            if global_counter >= 5:
                 # atleast 10k iterations happened
                 
                 # reset the global counter
