@@ -25,18 +25,29 @@ def backward_hook(grad):
 
 def save_model(model, file_name):
     """Serializes model to a file."""
-    if file_name != '':
-        with open(file_name, 'wb') as f:
-            torch.save(model, f)
+
+    torch.save({'state_dict': model.state_dict()}, file_name)
+
+    # if file_name != '':
+    #     with open(file_name, 'wb') as f:
+    #         torch.save(model, f)
 
 
-def load_model(file_name):
+def load_model(model, file_name):
     """Reads model from a file."""
-    with open(file_name, 'rb') as f:
-        if torch.cuda.is_available():
-            return torch.load(f)
-        else:
-            return torch.load(f, map_location=torch.device("cpu"))
+
+    if torch.cuda.is_available():
+        checkpoint = torch.load(file_name)
+    else:
+        checkpoint = torch.load(file_name, map_location=torch.device("cpu"))
+
+    model.load_state_dict(checkpoint['state_dict'])
+
+    # with open(file_name, 'rb') as f:
+    #     if torch.cuda.is_available():
+    #         return torch.load(f)
+    #     else:
+    #         return torch.load(f, map_location=torch.device("cpu"))
 
 
 def set_seed(seed):
