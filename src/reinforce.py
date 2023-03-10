@@ -31,6 +31,9 @@ from dialog import Dialog, DialogLogger
 
 logging.basicConfig(format=config.log_format, level=config.log_level)
 
+# global counter tracking the number of iterations that have successfully happened.
+global_counter = 0
+
 class Reinforce(object):
     """Facilitates a dialogue between two agents and constantly updates them."""
     def __init__(self, dialog, ctx_gen, args, engine, corpus, logger=None):
@@ -43,6 +46,9 @@ class Reinforce(object):
 
     def run(self):
         """Entry point of the training."""
+
+        assert global_counter == 0
+
         validset, validset_stats = self.corpus.valid_dataset(self.args.bsz,
             device_id=self.engine.device_id)
         trainset, trainset_stats = self.corpus.train_dataset(self.args.bsz,
@@ -52,7 +58,7 @@ class Reinforce(object):
         n = 0
         for ctxs in self.ctx_gen.iter(self.args.nepoch):
             n += 1
-            if n % 100:
+            if not n % 100:
                 logging.info(f"Num: {n}")
             # supervised update
             if self.args.sv_train_freq > 0 and n % self.args.sv_train_freq == 0:
@@ -68,6 +74,9 @@ class Reinforce(object):
             if n % 100 == 0:
                 self.logger.dump('%d: %s' % (n, self.dialog.show_metrics()), forced=True)
                 logging.info('%d: %s' % (n, self.dialog.show_metrics()))
+
+            # reached here, meaning success; increment global counter.
+            global_counter += 1
 
         def dump_stats(dataset, stats, name):
             loss, select_loss = self.engine.valid_pass(N, dataset, stats)
@@ -198,8 +207,13 @@ def main():
     else:
         # train multiple models based on configurations in config.utilities
         print(f"Total configurations: {len(config.utility_configs)}")
-        for conf in config.utility_configs:
-            logging.info("Using config %s" % (" ".join([str(ix) for ix in conf])))
+
+        conf_index = 0
+        
+        while conf_index < len(config.utility_configs):
+            conf = config.utility_configs[conf_index]
+
+            logging.info(f"Using config {conf_index}: {' '.join([str(ix) for ix in conf])}")
 
             alice_model = utils.load_model(args.alice_model_file)
             # we don't want to use Dropout during RL
@@ -232,10 +246,27 @@ def main():
             except RuntimeError:
                 print("runtime error caught !!!")
 
-            # reinforce.run()
-            out_path = f"{args.output_model_file.replace('.pt', '')}_rw_{args.rw_type}_{'_'.join([str(ix) for ix in conf])}.pt"
-            logging.info("Saving updated Alice model to %s" % (out_path))
-            utils.save_model(alice.model, out_path)
+            if global_counter >= 10000:
+                # atleast 10k iterations happened
+                
+                # reset the global counter
+                global_counter = 0
+
+                # save the trained model.
+                out_path = f"{args.output_model_file.replace('.pt', '')}_rw_{args.rw_type}_{'_'.join([str(ix) for ix in conf])}.pt"
+                logging.info("Saving updated Alice model to %s" % (out_path))
+                utils.save_model(alice.model, out_path)
+
+                #move to the next conf
+                conf_index += 1
+            else:
+                # redo the current conf; we could not get enough configurations.
+
+                # reset the global counter
+                global_counter = 0
+
+                #stay at the current conf
+                conf_index = conf_index
 
 
 if __name__ == '__main__':
