@@ -46,6 +46,7 @@ class Reinforce(object):
 
     def run(self):
         """Entry point of the training."""
+        global global_counter
 
         assert global_counter == 0
 
@@ -94,6 +95,8 @@ class Reinforce(object):
 
 
 def main():
+    global global_counter
+    
     parser = argparse.ArgumentParser(description='Reinforce')
     parser.add_argument('--data', type=str, default=config.data_dir,
         help='location of the data corpus')
