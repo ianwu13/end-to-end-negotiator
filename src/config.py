@@ -56,4 +56,21 @@ rl_score_threshold= 6
 verbose = False
 rl_temperature = 0.1
 scale_rw = 1.0
-rw_type = "own_points" # in ["own_points", "partner_points", "self_adv", "partner_adv", "combine75_25", "combine25_75", "combine50-50"]
+rw_type = "utility" # in ["own_points", "partner_points", "self_adv", "partner_adv", "combine75_25", "combine25_75", "combine50-50", "utility"]
+
+"""
+4 coefficients.
+Order: [i, j, a, b]
+
+Utility = max(0, i*xi + j*xj + a*max(0, xj-xi) + b*max(0, xi- xj))
+
+one model will be trained per configuration in the following list, if rw_type == "utility"
+
+"""
+utility_configs = [
+    [1, 0, 0, 0],
+    [0, 1, 0, 0],
+    [1, 0, 0, 1],
+    [1, 0, -0.5, 0],
+    [1, 0, -0.5, -0.25],
+]

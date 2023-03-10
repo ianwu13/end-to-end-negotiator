@@ -5,6 +5,8 @@
 # LICENSE file in the root directory of this source tree.
 """
 Reinforcement learning via Policy Gradient (REINFORCE).
+
+Perform RL in bulk on different reward definitions.
 """
 
 import argparse
@@ -151,41 +153,88 @@ def main():
     logging.info("CUDA is %s" % ("enabled. Using device_id:"+str(device_id) + " version:" \
         +str(torch.version.cuda) + " on gpu:" + torch.cuda.get_device_name(0) if args.cuda else "disabled"))
 
-    alice_model = utils.load_model(args.alice_model_file)
-    # we don't want to use Dropout during RL
-    alice_model.eval()
-    # Alice is a RL based agent, meaning that she will be learning while selfplaying
-    logging.info("Creating RlAgent from alice_model: %s" % (args.alice_model_file))
-    alice = RlAgent(alice_model, args, name='Alice')
 
-    # we keep Bob frozen, i.e. we don't update his parameters
-    logging.info("Creating Bob's (--smart_bob) LstmRolloutAgent" if args.smart_bob \
-        else "Creating Bob's (not --smart_bob) LstmAgent" )
-    bob_ty = LstmRolloutAgent if args.smart_bob else LstmAgent
-    bob_model = utils.load_model(args.bob_model_file)
-    bob_model.eval()
-    bob = bob_ty(bob_model, args, name='Bob')
+    if args.rw_type != "utility":
+        # train only one model.
 
-    logging.info("Initializing communication dialogue between Alice and Bob")
-    dialog = Dialog([alice, bob], args, scale_rw=args.scale_rw, rw_type=args.rw_type)
-    logger = DialogLogger(verbose=args.verbose, log_file=args.log_file)
-    ctx_gen = ContextGenerator(args.context_file)
+        alice_model = utils.load_model(args.alice_model_file)
+        # we don't want to use Dropout during RL
+        alice_model.eval()
+        # Alice is a RL based agent, meaning that she will be learning while selfplaying
+        logging.info("Creating RlAgent from alice_model: %s" % (args.alice_model_file))
+        alice = RlAgent(alice_model, args, name='Alice')
 
-    logging.info("Building word corpus, requiring minimum word frequency of %d for dictionary" % (args.unk_threshold))
-    corpus = data.WordCorpus(args.data, freq_cutoff=args.unk_threshold)
-    engine = Engine(alice_model, args, device_id, verbose=False)
+        # we keep Bob frozen, i.e. we don't update his parameters
+        logging.info("Creating Bob's (--smart_bob) LstmRolloutAgent" if args.smart_bob \
+            else "Creating Bob's (not --smart_bob) LstmAgent" )
+        bob_ty = LstmRolloutAgent if args.smart_bob else LstmAgent
+        bob_model = utils.load_model(args.bob_model_file)
+        bob_model.eval()
+        bob = bob_ty(bob_model, args, name='Bob')
 
-    logging.info("Starting Reinforcement Learning")
-    reinforce = Reinforce(dialog, ctx_gen, args, engine, corpus, logger)
-    try:
-        reinforce.run()
-    except RuntimeError:
-        print("runtime error caught !!!")
+        logging.info("Initializing communication dialogue between Alice and Bob")
+        dialog = Dialog([alice, bob], args, scale_rw=args.scale_rw, rw_type=args.rw_type)
+        logger = DialogLogger(verbose=args.verbose, log_file=args.log_file)
+        ctx_gen = ContextGenerator(args.context_file)
 
-    # reinforce.run()
+        logging.info("Building word corpus, requiring minimum word frequency of %d for dictionary" % (args.unk_threshold))
+        corpus = data.WordCorpus(args.data, freq_cutoff=args.unk_threshold)
+        engine = Engine(alice_model, args, device_id, verbose=False)
 
-    logging.info("Saving updated Alice model to %s" % (args.output_model_file))
-    utils.save_model(alice.model, args.output_model_file)
+        logging.info("Starting Reinforcement Learning")
+        reinforce = Reinforce(dialog, ctx_gen, args, engine, corpus, logger)
+        try:
+            reinforce.run()
+        except RuntimeError:
+            print("runtime error caught !!!")
+
+        # reinforce.run()
+
+        out_path = f"{args.output_model_file.replace('.pt', '')}_rw_{args.rw_type}.pt"
+        logging.info("Saving updated Alice model to %s" % (out_path))
+        utils.save_model(alice.model, out_path)
+
+    else:
+        # train multiple models based on configurations in config.utilities
+        print(f"Total configurations: {len(config.utility_configs)}")
+        for conf in config.utility_configs:
+            logging.info("Using config %s" % (" ".join([str(ix) for ix in conf])))
+
+            alice_model = utils.load_model(args.alice_model_file)
+            # we don't want to use Dropout during RL
+            alice_model.eval()
+            # Alice is a RL based agent, meaning that she will be learning while selfplaying
+            logging.info("Creating RlAgent from alice_model: %s" % (args.alice_model_file))
+            alice = RlAgent(alice_model, args, name='Alice')
+
+            # we keep Bob frozen, i.e. we don't update his parameters
+            logging.info("Creating Bob's (--smart_bob) LstmRolloutAgent" if args.smart_bob \
+                else "Creating Bob's (not --smart_bob) LstmAgent" )
+            bob_ty = LstmRolloutAgent if args.smart_bob else LstmAgent
+            bob_model = utils.load_model(args.bob_model_file)
+            bob_model.eval()
+            bob = bob_ty(bob_model, args, name='Bob')
+
+            logging.info("Initializing communication dialogue between Alice and Bob")
+            dialog = Dialog([alice, bob], args, scale_rw=args.scale_rw, rw_type=args.rw_type)
+            logger = DialogLogger(verbose=args.verbose, log_file=args.log_file)
+            ctx_gen = ContextGenerator(args.context_file)
+
+            logging.info("Building word corpus, requiring minimum word frequency of %d for dictionary" % (args.unk_threshold))
+            corpus = data.WordCorpus(args.data, freq_cutoff=args.unk_threshold)
+            engine = Engine(alice_model, args, device_id, verbose=False)
+
+            logging.info("Starting Reinforcement Learning")
+            reinforce = Reinforce(dialog, ctx_gen, args, engine, corpus, logger)
+            try:
+                reinforce.run()
+            except RuntimeError:
+                print("runtime error caught !!!")
+
+            # reinforce.run()
+            out_path = f"{args.output_model_file.replace('.pt', '')}_rw_{args.rw_type}_{'_'.join(conf)}.pt"
+            logging.info("Saving updated Alice model to %s" % (out_path))
+            utils.save_model(alice.model, out_path)
 
 
 if __name__ == '__main__':
