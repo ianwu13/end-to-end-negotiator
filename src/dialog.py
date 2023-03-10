@@ -216,12 +216,14 @@ class Dialog(object):
         
         if agree == -1 and rewards == -1:
             # this is neither an agreement, nor a disagreement - we don't know due to model failure.
-            print("Failure mode. - agree and rewards are both None. Ignoring this case.")
+            # print("Failure mode. - agree and rewards are both None. Ignoring this case.")
+            print("Failure")
             return None, None, None
         
         if not agree:
             # this is disagreement between the two. 
-            print("Disagreement between the two models.")
+            # print("Disagreement between the two models.")
+            print("Disagreement")
 
         logger.dump('-' * 80)
 

@@ -59,7 +59,7 @@ class Reinforce(object):
         n = 0
         for ctxs in self.ctx_gen.iter(self.args.nepoch):
             n += 1
-            if not n % 100:
+            if not n % 10:
                 logging.info(f"Num: {n}")
             # supervised update
             if self.args.sv_train_freq > 0 and n % self.args.sv_train_freq == 0:
@@ -249,7 +249,7 @@ def main():
             except RuntimeError:
                 print("runtime error caught !!!")
 
-            if global_counter >= 5:
+            if global_counter >= 10000:
                 # atleast 10k iterations happened
                 
                 # reset the global counter
