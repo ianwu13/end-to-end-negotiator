@@ -24,6 +24,8 @@ from utils import ContextGenerator
 from dialog import Dialog, DialogLogger
 from models.dialog_model import DialogModel
 
+import data
+
 
 class SelfPlay(object):
     """Selfplay runner."""
@@ -94,12 +96,14 @@ def main():
 
     utils.set_seed(args.seed)
 
-    alice_model = utils.load_model(args.alice_model_file)
+    device_id = utils.use_cuda(args.cuda)
+    corpus = data.WordCorpus(args.data, freq_cutoff=args.unk_threshold, verbose=True)
+
+    alice_model = utils.load_model(args.alice_model_file, device_id, corpus)
     alice_ty = get_agent_type(alice_model, args.smart_alice, args.fast_rollout)
     alice = alice_ty(alice_model, args, name='Alice')
 
-    bob_model = utils.load_model(args.bob_model_file)
-
+    bob_model = utils.load_model(args.bob_model_file, device_id, corpus)
     bob_ty = get_agent_type(bob_model, args.smart_bob, args.fast_rollout)
     bob = bob_ty(bob_model, args, name='Bob')
 

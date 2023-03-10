@@ -14,6 +14,7 @@ import sys
 
 import torch
 import numpy as np
+from models.dialog_model import DialogModel
 
 
 def backward_hook(grad):
@@ -25,16 +26,13 @@ def backward_hook(grad):
 
 def save_model(model, file_name):
     """Serializes model to a file."""
+    torch.save({'state_dict': model.state_dict(), 'args': model.args}, file_name)
 
-    torch.save({'state_dict': model.state_dict()}, file_name)
-
-    # if file_name != '':
-    #     with open(file_name, 'wb') as f:
-    #         torch.save(model, f)
-
-
-def load_model(model, file_name):
+def load_model(file_name, device_id, corpus):
     """Reads model from a file."""
+
+    model = DialogModel(corpus.word_dict, corpus.item_dict, corpus.context_dict,
+        corpus.output_length, load_args(file_name), device_id)
 
     if torch.cuda.is_available():
         checkpoint = torch.load(file_name)
@@ -43,12 +41,16 @@ def load_model(model, file_name):
 
     model.load_state_dict(checkpoint['state_dict'])
 
-    # with open(file_name, 'rb') as f:
-    #     if torch.cuda.is_available():
-    #         return torch.load(f)
-    #     else:
-    #         return torch.load(f, map_location=torch.device("cpu"))
+    return model
 
+def load_args(file_name):
+    """Just load the args from a saved model object."""
+    if torch.cuda.is_available():
+        checkpoint = torch.load(file_name)
+    else:
+        checkpoint = torch.load(file_name, map_location=torch.device("cpu"))
+
+    return checkpoint["args"]
 
 def set_seed(seed):
     """Sets random seed everywhere."""
