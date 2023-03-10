@@ -115,7 +115,7 @@ class DialogSelfTrainLogger(DialogLogger):
 
 class Dialog(object):
     """Dialogue runner."""
-    def __init__(self, agents, args, scale_rw = 1.0, rw_type="own_points"):
+    def __init__(self, agents, args, scale_rw = 1.0, rw_type="own_points", conf=None):
         # for now we only suppport dialog of 2 agents
         assert len(agents) == 2
         self.agents = agents
@@ -125,6 +125,7 @@ class Dialog(object):
         self._register_metrics()
         self.scale_rw = scale_rw
         self.rw_type = rw_type
+        self.conf = conf
 
     def _register_metrics(self):
         """Registers valuable metrics."""
@@ -211,7 +212,7 @@ class Dialog(object):
                 logger.dump_choice(agent.name, choice[: self.domain.selection_length() // 2])
 
             # evaluate the choices, produce agreement and a reward
-            agree, rewards = self.domain.score_choices(choices, ctxs, rw_type=self.rw_type)
+            agree, rewards = self.domain.score_choices(choices, ctxs, rw_type=self.rw_type, conf=self.conf)
         
         if agree == -1 and rewards == -1:
             # this is neither an agreement, nor a disagreement - we don't know due to model failure.

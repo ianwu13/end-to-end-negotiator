@@ -33,14 +33,13 @@ logging.basicConfig(format=config.log_format, level=config.log_level)
 
 class Reinforce(object):
     """Facilitates a dialogue between two agents and constantly updates them."""
-    def __init__(self, dialog, ctx_gen, args, engine, corpus, logger=None, conf=None):
+    def __init__(self, dialog, ctx_gen, args, engine, corpus, logger=None):
         self.dialog = dialog
         self.ctx_gen = ctx_gen
         self.args = args
         self.engine = engine
         self.corpus = corpus
         self.logger = logger if logger else DialogLogger()
-        self.conf = conf # configuration in case args.rw_type == utility
 
     def run(self):
         """Entry point of the training."""
@@ -217,7 +216,7 @@ def main():
             bob = bob_ty(bob_model, args, name='Bob')
 
             logging.info("Initializing communication dialogue between Alice and Bob")
-            dialog = Dialog([alice, bob], args, scale_rw=args.scale_rw, rw_type=args.rw_type)
+            dialog = Dialog([alice, bob], args, scale_rw=args.scale_rw, rw_type=args.rw_type, conf=conf)
             logger = DialogLogger(verbose=args.verbose, log_file=args.log_file)
             ctx_gen = ContextGenerator(args.context_file)
 
@@ -226,7 +225,7 @@ def main():
             engine = Engine(alice_model, args, device_id, verbose=False)
 
             logging.info("Starting Reinforcement Learning")
-            reinforce = Reinforce(dialog, ctx_gen, args, engine, corpus, logger, conf=conf)
+            reinforce = Reinforce(dialog, ctx_gen, args, engine, corpus, logger)
             try:
                 reinforce.run()
             except RuntimeError:
