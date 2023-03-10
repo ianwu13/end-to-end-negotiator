@@ -33,13 +33,14 @@ logging.basicConfig(format=config.log_format, level=config.log_level)
 
 class Reinforce(object):
     """Facilitates a dialogue between two agents and constantly updates them."""
-    def __init__(self, dialog, ctx_gen, args, engine, corpus, logger=None):
+    def __init__(self, dialog, ctx_gen, args, engine, corpus, logger=None, conf=None):
         self.dialog = dialog
         self.ctx_gen = ctx_gen
         self.args = args
         self.engine = engine
         self.corpus = corpus
         self.logger = logger if logger else DialogLogger()
+        self.conf = conf # configuration in case args.rw_type == utility
 
     def run(self):
         """Entry point of the training."""
@@ -225,7 +226,7 @@ def main():
             engine = Engine(alice_model, args, device_id, verbose=False)
 
             logging.info("Starting Reinforcement Learning")
-            reinforce = Reinforce(dialog, ctx_gen, args, engine, corpus, logger)
+            reinforce = Reinforce(dialog, ctx_gen, args, engine, corpus, logger, conf=conf)
             try:
                 reinforce.run()
             except RuntimeError:

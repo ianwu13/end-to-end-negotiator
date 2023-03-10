@@ -145,7 +145,7 @@ class ObjectDivisionDomain(Domain):
         except:
             return 0
 
-    def score_choices(self, choices, ctxs, rw_type="own_points"):
+    def score_choices(self, choices, ctxs, rw_type="own_points", conf=None):
         """
         modified implementation:
             the conversation ends with a selection token or when max. number of utterances have been reached.
@@ -154,7 +154,8 @@ class ObjectDivisionDomain(Domain):
             if the two outputs are numbers and don’t match or one of them is no agreement - > they don’t match - > ignore this scenario = modeling failure.
             if the two outputs are no agreements and match -> 0 rewards.
 
-        rw_type: type of the reward in ["own_points", "partner_points"]
+        rw_type: type of the reward, as in config.rw_type
+        conf: configuration in case the rw_type == "utility"
         """
         assert len(choices) == len(ctxs)
 
@@ -256,6 +257,19 @@ class ObjectDivisionDomain(Domain):
                 partner_comb_scores.append(comb)
 
             return agree, partner_comb_scores
+        
+        if rw_type == "utility":
+            # use the utility function
+            assert conf
+            scores = scores[:]
+            rev_scores = scores[::-1]
+
+            utility_scores = []
+            for s, rs in zip(scores, rev_scores):
+                comb = max([0, conf[0]*s + conf[1]*rs + conf[2]*max([0, rs - s]) + conf[3]*max([0, s - rs])])
+                utility_scores.append(comb)
+
+            return agree, utility_scores
         
         raise ValueError
     
