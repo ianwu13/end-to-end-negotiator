@@ -232,7 +232,7 @@ def main():
                 print("runtime error caught !!!")
 
             # reinforce.run()
-            out_path = f"{args.output_model_file.replace('.pt', '')}_rw_{args.rw_type}_{'_'.join(conf)}.pt"
+            out_path = f"{args.output_model_file.replace('.pt', '')}_rw_{args.rw_type}_{'_'.join([str(ix) for ix in conf])}.pt"
             logging.info("Saving updated Alice model to %s" % (out_path))
             utils.save_model(alice.model, out_path)
 
