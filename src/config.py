@@ -62,15 +62,34 @@ rw_type = "utility" # in ["own_points", "partner_points", "self_adv", "partner_a
 4 coefficients.
 Order: [i, j, a, b]
 
-Utility = max(0, i*xi + j*xj + a*max(0, xj-xi) + b*max(0, xi- xj))
+Utility = max(0, i*xi + j*xj + a*max(0, xj-xi) + b*max(0, xi-xj))
 
 one model will be trained per configuration in the following list, if rw_type == "utility"
 
 """
 utility_configs = [
-    [1, 0, 0, 0],
+
+    # illegal    
     [0, 1, 0, 0],
+    [0, 1, 1, 0],
     [1, 0, 0, 1],
+    [1, 0, -1, -1],
+
+    # legal
+    [1, 0, 0, 0],
+
     [1, 0, -0.5, 0],
     [1, 0, -0.5, -0.25],
+    [1, 0, -0.5, -0.5],
+
+    [1, 0, -0.75, 0],
+    [1, 0, -0.75, -0.25],
+    [1, 0, -0.75, -0.5],
+    [1, 0, -0.75, -0.75],
+
+    [1, 0, -1, 0],
+    [1, 0, -1, -0.25],
+    [1, 0, -1, -0.5],
+    [1, 0, -1, -0.75],
+
 ]

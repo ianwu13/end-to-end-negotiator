@@ -52,7 +52,8 @@ class Reinforce(object):
         n = 0
         for ctxs in self.ctx_gen.iter(self.args.nepoch):
             n += 1
-            print(f"Num: {n}")
+            if n % 100:
+                logging.info(f"Num: {n}")
             # supervised update
             if self.args.sv_train_freq > 0 and n % self.args.sv_train_freq == 0:
                 self.engine.train_single(N, trainset)
