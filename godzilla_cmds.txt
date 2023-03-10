@@ -4,7 +4,7 @@ CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python train.py  --data data/negot
 CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=6 python chat.py --model_file sv_model.th --context_file data/negotiate/selfplay.txt --temperature 0.5 --ref_text data/negotiate/train.txt
 
 
-CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python selfplay.py --cuda --alice_model_file ../../logs/sv_model.pt --bob_model_file ../../logs/sv_model.pt --context_file data/negotiate/selfplay.txt --temperature 0.5 --log_file selfplay.log --ref_text data/negotiate/train.txt
+CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python selfplay.py --alice_model_file ../../logs/sv_model.pt --bob_model_file ../../logs/sv_model.pt --context_file data/negotiate/selfplay.txt --temperature 0.5 --log_file selfplay.log --ref_text data/negotiate/train.txt
 
 CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=9 python reinforce.py --data data/negotiate --bsz 16 --clip 1 --context_file data/negotiate/selfplay.txt --eps 0.0 --gamma 0.95 --lr 0.5 --momentum 0.1 --nepoch 4 --nesterov --ref_text data/negotiate/train.txt --rl_clip 1 --rl_lr 0.2 --score_threshold 6 --sv_train_freq 4 --temperature 0.5 --alice_model sv_model.th --bob_model sv_model.th --output_model_file rl_model.th
 
