@@ -23,7 +23,7 @@ import utils
 from utils import ContextGenerator
 from dialog import Dialog, DialogLogger
 from models.dialog_model import DialogModel
-
+import config
 import data
 
 
@@ -92,6 +92,8 @@ def main():
         help='file with the reference text')
     parser.add_argument('--domain', type=str, default='object_division',
         help='domain for the dialogue')
+    parser.add_argument('--cuda', action='store_true', default=config.cuda,
+        help='use CUDA')
     args = parser.parse_args()
 
     utils.set_seed(args.seed)
