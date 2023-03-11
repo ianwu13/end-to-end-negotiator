@@ -83,12 +83,12 @@ def main():
 
             mod1_path = os.path.join(args.models_dir, mod1)
             alice_model = utils.load_model(mod1_path)
-            alice_ty = get_agent_type(alice_model, args.smart_alice, args.fast_rollout)
+            alice_ty = get_agent_type(alice_model)
             alice = alice_ty(alice_model, args, name='Alice')
 
             mod2_path = os.path.join(args.models_dir, mod2)
             bob_model = utils.load_model(mod2_path)
-            bob_ty = get_agent_type(bob_model, args.smart_bob, args.fast_rollout)
+            bob_ty = get_agent_type(bob_model)
             bob = bob_ty(bob_model, args, name='Bob')
 
             dialog = Dialog([alice, bob], args)
