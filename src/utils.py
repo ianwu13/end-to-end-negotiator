@@ -15,8 +15,8 @@ import sys
 import torch
 import numpy as np
 from models.dialog_model import DialogModel
-import config
 import data
+import os
 
 
 def backward_hook(grad):
@@ -71,6 +71,19 @@ def prob_random():
     """Prints out the states of various RNGs."""
     print('random state: python %.3f torch %.3f numpy %.3f' % (
         random.random(), torch.rand(1)[0], np.random.rand()))
+    
+
+def get_model_names(models_dir):
+    """Get all model names inside this dir."""
+    model_names = []
+
+    for item in os.listdir(models_dir):
+        if os.path.isfile(os.path.join(models_dir, item)):
+            assert "rl_model" in item or "sv_model" in item
+            assert ".pt" in item
+            model_names.append(item)
+    
+    return model_names
 
 
 class ContextGenerator(object):
@@ -85,6 +98,37 @@ class ContextGenerator(object):
                 if len(ctx_pair) == 2:
                     self.ctxs.append(ctx_pair)
                     ctx_pair = []
+
+    def sample(self):
+        return random.choice(self.ctxs)
+
+    def iter(self, nepoch=1):
+        for e in range(nepoch):
+            random.shuffle(self.ctxs)
+            for ctx in self.ctxs:
+                yield ctx
+
+
+class DNDContextGenerator(object):
+    """Dialogue context generator. Generates contexes from the file in standard DND format - basically to be used for extracting the contexts directly from the data/negotiate/test.txt file."""
+    def __init__(self, context_file):
+        self.ctxs = []
+        with open(context_file, 'r') as f:
+            for line in f:
+                tokens = line.strip().split()
+                ctx_pair = [data.get_tag(tokens, "input"), data.get_tag(tokens, "partner_input")]
+                self.ctxs.append(ctx_pair)
+
+        print(f"Num ctx pairs loaded: {len(self.ctxs)}")
+
+        # validate
+        for ix, item in enumerate(self.ctxs):
+            f = 0
+            for ij, item2 in enumerate(self.ctxs):
+                if ij != ix and item[::-1] == item2:
+                    f = 1
+                    break
+            assert f, f"{ix}: {item}"
 
     def sample(self):
         return random.choice(self.ctxs)
