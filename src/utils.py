@@ -83,8 +83,16 @@ def get_model_names(models_dir):
             assert ".pt" in item
             model_names.append(item)
     
-    return model_names
+    return sorted(model_names)
 
+def get_pw_conv_fnames(conv_dir):
+    """Get all log files inside this dir."""
+    pw_conv_fnames = []
+    for item in os.listdir(conv_dir):
+        if os.path.isfile(os.path.join(conv_dir, item)):
+            assert ".log" in item
+            pw_conv_fnames.append(item)
+    return sorted(pw_conv_fnames)
 
 class ContextGenerator(object):
     """Dialogue context generator. Generates contexes from the file."""

@@ -57,7 +57,7 @@ def main():
     parser = argparse.ArgumentParser(description='selfplaying script')
     parser.add_argument('--models_dir', type=str,
         help='A directory containing all models.')
-    parser.add_argument('--log_dir', type=str, default='',
+    parser.add_argument('--conv_dir', type=str, default='',
         help='directory where we store pairwise interactions.')
     parser.add_argument('--context_file', type=str,
         help='context file')
@@ -94,7 +94,7 @@ def main():
             bob = bob_ty(bob_model, args, name='Bob')
 
             dialog = Dialog([alice, bob], args)
-            log_file = os.path.join(args.log_dir, f"{mod1}_{mod2}.log")
+            log_file = os.path.join(args.conv_dir, f"{mod1}_{mod2}.log")
             logger = DialogLogger(verbose=args.verbose, log_file=log_file)
             ctx_gen = DNDContextGenerator(args.context_file)
 
