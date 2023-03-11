@@ -67,6 +67,8 @@ def main():
         help='print out converations')
     parser.add_argument('--seed', type=int, default=1,
         help='random seed')
+    parser.add_argument('--ref_text', type=str,
+        help='file with the reference text')
     parser.add_argument('--domain', type=str, default='object_division',
         help='domain for the dialogue')
     args = parser.parse_args()

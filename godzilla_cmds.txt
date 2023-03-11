@@ -25,4 +25,4 @@ Decrease the reward further for no agreement case.
 Is the outcome prediction model separate already in the next paper? how is agreement disagreement defined in that work? Separate out the outcome prediction model - keep track of failure cases...keep track of the outcome prediction points and confidence and entropy.
 
 
-CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python bot_bot_play.py --models_dir ../../logs/ --log_dir ../../logs/bot_bot/convs/ --context_file data/negotiate/test_dummy.txt --temperature 0.5
+CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python bot_bot_play.py --models_dir ../../logs/ --log_dir ../../logs/bot_bot/convs/ --context_file data/negotiate/test_dummy.txt --temperature 0.5 --ref_text data/negotiate/train.txt
