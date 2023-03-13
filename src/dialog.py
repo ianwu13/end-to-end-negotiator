@@ -250,7 +250,9 @@ class Dialog(object):
             # this is disagreement between the two.
             # print("Disagreement between the two models.")
             print("Disagreement")
-            storage["agreement_status"] = "no_agreement_wa" #the choices match and end in a disagreement.
+            if not storage["agreement_status"]:
+                # there is no agreement, which is not of type len.hence, it is of type wa.
+                storage["agreement_status"] = "no_agreement_wa" #the choices match and end in a disagreement.
         else:
             # there is agreement
             storage["agreement_status"] = "agreement" # choices match and are numbers.
