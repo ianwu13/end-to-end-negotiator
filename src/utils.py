@@ -150,10 +150,10 @@ class DNDContextGenerator(object):
         cset = set()
         ctxs3 = []
         for item in ctxs:
-            if item in cset:
+            if ' '.join(item[0] + item[1]) in cset:
                 continue
             ctxs3.append(item)
-            cset.add(item)
+            cset.add(' '.join(item[0] + item[1]))
 
         self.ctxs = ctxs3[:]
 
