@@ -96,24 +96,23 @@ def is_pareto_optimal(obj):
     
     names = sorted(list(obj["ctxs"].keys()))
     cnts = [
-        obj["ctxs"][names[0]][0],
-        obj["ctxs"][names[0]][2],
-        obj["ctxs"][names[0]][4],
+        int(obj["ctxs"][names[0]][0]),
+        int(obj["ctxs"][names[0]][2]),
+        int(obj["ctxs"][names[0]][4]),
     ]
 
     vals1 = [
-        obj["ctxs"][names[0]][1],
-        obj["ctxs"][names[0]][3],
-        obj["ctxs"][names[0]][5],
+        int(obj["ctxs"][names[0]][1]),
+        int(obj["ctxs"][names[0]][3]),
+        int(obj["ctxs"][names[0]][5]),
     ]
 
     vals2 = [
-        obj["ctxs"][names[1]][1],
-        obj["ctxs"][names[1]][3],
-        obj["ctxs"][names[1]][5],
+        int(obj["ctxs"][names[1]][1]),
+        int(obj["ctxs"][names[1]][3]),
+        int(obj["ctxs"][names[1]][5]),
     ]
 
-    print(obj)
     picks1 = [int(itt.split("=")[-1]) for itt in obj["choices"][names[0]]]
     picks2 = [int(itt.split("=")[-1]) for itt in obj["choices"][names[1]]]
 
