@@ -209,7 +209,7 @@ def main():
     for ix, mod1 in enumerate(model_names):
         for ij in range(ix, len(model_names)):
             mod2 = model_names[ij]
-            key = (mod1, mod2)
+            key = f"{mod1}___{mod2}"
             print(key)
 
             mod1_path = os.path.join(args.models_dir, mod1)
