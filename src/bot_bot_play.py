@@ -206,8 +206,8 @@ def main():
     # model pair to a list of chat logs with metrics.
     all_chats = {}
 
-    for ix, mod1 in enumerate(model_names):
-        for ij in range(ix, len(model_names)):
+    for ix, mod1 in enumerate(model_names[:1]):
+        for ij in range(ix, len(model_names[:1])):
             mod2 = model_names[ij]
             key = f"{mod1}___{mod2}"
             print(key)
