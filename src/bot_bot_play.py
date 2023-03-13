@@ -234,7 +234,6 @@ def main():
     print(f"All interactions complete. Storing in a json file: {out_file}")
     with open(out_file, "w") as outfile:
         json.dump(all_chats, outfile)
-    
 
 
 if __name__ == '__main__':
