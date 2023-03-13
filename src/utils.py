@@ -158,6 +158,8 @@ class DNDContextGenerator(object):
         self.ctxs = ctxs3[:]
 
         #validate
+
+        #no bad ones
         for item in self.ctxs:
             f = 0
             for item2 in self.ctxs:
@@ -165,6 +167,12 @@ class DNDContextGenerator(object):
                     f = 1
                     break
             assert f, item
+
+        #uniqueness
+        cset = set()
+        for item in self.ctxs:
+            cset.add(" ".join(item[0] + item[1]))
+        assert len(cset) == len(self.ctxs)
 
         print(f"Num ctx pairs loaded: {len(self.ctxs)}")
 
