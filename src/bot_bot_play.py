@@ -210,7 +210,7 @@ def main():
         for ij in range(ix, len(model_names)):
             mod2 = model_names[ij]
             key = f"{mod1}___{mod2}"
-            print(key)
+            print(ix, ij, key)
 
             mod1_path = os.path.join(args.models_dir, mod1)
             alice_model = utils.load_model(mod1_path)

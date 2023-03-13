@@ -118,7 +118,7 @@ class ContextGenerator(object):
 
 
 class DNDContextGenerator(object):
-    """Dialogue context generator. Generates contexes from the file in standard DND format - basically to be used for extracting the contexts directly from the data/negotiate/test.txt file."""
+    """Dialogue context generator. Generates contexes from the file in standard DND format - basically to be used for extracting the contexts directly from the data/negotiate/test.txt file for bot_bot play."""
     def __init__(self, context_file):
         ctxs = []
         with open(context_file, 'r') as f:
@@ -158,7 +158,7 @@ class DNDContextGenerator(object):
             ctxs3.append(item)
 
         print(f"ctxs3: {len(ctxs3)}")
-        
+
         self.ctxs = ctxs3[:]
 
         #validate
@@ -185,7 +185,7 @@ class DNDContextGenerator(object):
 
     def iter(self, nepoch=1):
         for e in range(nepoch):
-            random.shuffle(self.ctxs)
+            # random.shuffle(self.ctxs) # no randomization required since this class is only for bot-bot evaluation via the bot_bot_play script.
             for ctx in self.ctxs:
                 yield ctx
 
