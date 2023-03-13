@@ -126,15 +126,17 @@ class DNDContextGenerator(object):
                 tokens = line.strip().split()
                 ctx_pair = [data.get_tag(tokens, "input"), data.get_tag(tokens, "partner_input")]
                 ctxs.append(ctx_pair)
+        print(f"ctxs: {len(ctxs)}")
 
         #only keep the unique ones
         cset = set()
         ctxs2 = []
         for item in ctxs:
-            if ' '.join(item[0] + item[1]) in cset:
+            if " ".join(item[0] + item[1]) in cset:
                 continue
             ctxs2.append(item)
-            cset.add(' '.join(item[0] + item[1]))
+            cset.add(" ".join(item[0] + item[1]))
+        print(f"ctxs2: {len(ctxs2)}")
 
         # remove bad_ixs
         bad_ixs = set()
@@ -155,6 +157,8 @@ class DNDContextGenerator(object):
                 continue
             ctxs3.append(item)
 
+        print(f"ctxs3: {len(ctxs3)}")
+        
         self.ctxs = ctxs3[:]
 
         #validate
