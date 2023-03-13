@@ -139,14 +139,23 @@ class DNDContextGenerator(object):
                 # this is bad and should be removed.
                 bad_ixs.add(ix)
 
-        # filter out
+        # filter out bad ones.
         ctxs2 = []
         for ix, item in enumerate(ctxs):
             if ix in bad_ixs:
                 continue
             ctxs2.append(item)
         
-        self.ctxs = ctxs2[:]
+        #only keep the unique ones
+        cset = set()
+        ctxs3 = []
+        for item in ctxs:
+            if item in cset:
+                continue
+            ctxs3.append(item)
+            cset.add(item)
+
+        self.ctxs = ctxs3[:]
 
         #validate
         for ix, item in enumerate(self.ctxs):
@@ -155,13 +164,7 @@ class DNDContextGenerator(object):
                 if ij != ix and item[::-1] == item2:
                     f = 1
                     break
-            assert f
-
-        cset = set()
-        for item in self.ctxs:
-            cset.add(" ".join(item[0] + item[1]))
-        
-        print(f"total, set: {len(self.ctxs), len(cset)}")
+            assert f, item
 
         print(f"Num ctx pairs loaded: {len(self.ctxs)}")
 
