@@ -152,10 +152,21 @@ class Dialog(object):
     def run(self, ctxs, logger):
         """Runs one instance of the dialogue."""
         assert len(self.agents) == len(ctxs)
+
+        #obj for storage
+        storage = {
+            "ctxs": {},
+            "conv": [],
+            "choices": {},
+            "agreement_status": None,
+            "rewards": {},
+        }
+
         # initialize agents by feeding in the contexes
         for agent, ctx in zip(self.agents, ctxs):
             agent.feed_context(ctx)
             logger.dump_ctx(agent.name, ctx)
+            storage["ctxs"][agent.name] = ctx
         logger.dump('-' * 80)
 
         # choose who goes first by random
@@ -180,6 +191,12 @@ class Dialog(object):
 
             # append the utterance to the conversation
             conv.append(out)
+            storage["conv"].append(
+                {
+                    "name": writer.name,
+                    "sent": " ".join(out),
+                }
+            )
             # make the other agent to read it
             reader.read(out)
             if not writer.human:
@@ -203,6 +220,12 @@ class Dialog(object):
                 ["<no_agreement>", "<no_agreement>", "<no_agreement>"],
                 ["<no_agreement>", "<no_agreement>", "<no_agreement>"],
             ]
+
+            storage["agreement_status"] = "no_agreement_len"
+
+            for agent, choice, in zip(self.agents, choices):
+                storage["choices"][agent.name] = choice
+
         else:
             # the conversation atleast finished nicely; now we try to get a consistent output.
             # generate choices for each of the agents
@@ -210,6 +233,7 @@ class Dialog(object):
                 choice = agent.choose()
                 choices.append(choice)
                 logger.dump_choice(agent.name, choice[: self.domain.selection_length() // 2])
+                storage["choices"][agent.name] = choice[: self.domain.selection_length() // 2]
 
             # evaluate the choices, produce agreement and a reward
             agree, rewards = self.domain.score_choices(choices, ctxs, rw_type=self.rw_type, conf=self.conf)
@@ -218,12 +242,24 @@ class Dialog(object):
             # this is neither an agreement, nor a disagreement - we don't know due to model failure.
             # print("Failure mode. - agree and rewards are both None. Ignoring this case.")
             print("Failure")
-            return None, None, None
+
+            storage["agreement_status"] = "mismatch_failure" # the choices of the two agents were different, hence, the output is inconclusive.
+            return None, None, None, storage
         
         if not agree:
-            # this is disagreement between the two. 
+            # this is disagreement between the two.
             # print("Disagreement between the two models.")
             print("Disagreement")
+            storage["agreement_status"] = "no_agreement_wa" #the choices match and end in a disagreement.
+        else:
+            # there is agreement
+            storage["agreement_status"] = "agreement" # choices match and are numbers.
+        
+        for agent, reward in zip(self.agents, rewards):
+            if storage["agreement_status"] == "agreement":
+                storage["rewards"][agent.name] = reward
+            elif "no_agreement" in storage["agreement_status"]:
+                storage["rewards"][agent.name] = 0
 
         logger.dump('-' * 80)
 
@@ -249,4 +285,4 @@ class Dialog(object):
         for ctx, choice in zip(ctxs, choices):
             logger.dump('debug: %s %s' % (' '.join(ctx), ' '.join(choice)))
 
-        return conv, agree, rewards
+        return conv, agree, rewards, storage
