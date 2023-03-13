@@ -148,6 +148,15 @@ class DNDContextGenerator(object):
         
         self.ctxs = ctxs2[:]
 
+        #validate
+        for ix, item in enumerate(self.ctxs):
+            f = 0
+            for ij, item2 in enumerate(self.ctxs):
+                if ij != ix and item[::-1] == item2:
+                    f = 1
+                    break
+            assert f
+
         print(f"Num ctx pairs loaded: {len(self.ctxs)}")
 
     def sample(self):
