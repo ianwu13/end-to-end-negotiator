@@ -157,6 +157,12 @@ class DNDContextGenerator(object):
                     break
             assert f
 
+        cset = set()
+        for item in self.ctxs:
+            cset.add(" ".join(item[0] + item[1]))
+        
+        print(f"total, set: {len(self.ctxs), len(cset)}")
+
         print(f"Num ctx pairs loaded: {len(self.ctxs)}")
 
     def sample(self):
