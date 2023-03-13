@@ -120,23 +120,35 @@ class ContextGenerator(object):
 class DNDContextGenerator(object):
     """Dialogue context generator. Generates contexes from the file in standard DND format - basically to be used for extracting the contexts directly from the data/negotiate/test.txt file."""
     def __init__(self, context_file):
-        self.ctxs = []
+        ctxs = []
         with open(context_file, 'r') as f:
             for line in f:
                 tokens = line.strip().split()
                 ctx_pair = [data.get_tag(tokens, "input"), data.get_tag(tokens, "partner_input")]
-                self.ctxs.append(ctx_pair)
+                ctxs.append(ctx_pair)
 
-        print(f"Num ctx pairs loaded: {len(self.ctxs)}")
-
-        # validate
-        for ix, item in enumerate(self.ctxs):
+        # remove bad_ixs
+        bad_ixs = set()
+        for ix, item in enumerate(ctxs):
             f = 0
-            for ij, item2 in enumerate(self.ctxs):
+            for ij, item2 in enumerate(ctxs):
                 if ij != ix and item[::-1] == item2:
                     f = 1
                     break
-            assert f, f"{ix}: {item}"
+            if not f:
+                # this is bad and should be removed.
+                bad_ixs.add(ix)
+
+        # filter out
+        ctxs2 = []
+        for ix, item in enumerate(ctxs):
+            if ix in bad_ixs:
+                continue
+            ctxs2.append(item)
+        
+        self.ctxs = ctxs2[:]
+
+        print(f"Num ctx pairs loaded: {len(self.ctxs)}")
 
     def sample(self):
         return random.choice(self.ctxs)
