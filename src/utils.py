@@ -127,12 +127,21 @@ class DNDContextGenerator(object):
                 ctx_pair = [data.get_tag(tokens, "input"), data.get_tag(tokens, "partner_input")]
                 ctxs.append(ctx_pair)
 
+        #only keep the unique ones
+        cset = set()
+        ctxs2 = []
+        for item in ctxs:
+            if ' '.join(item[0] + item[1]) in cset:
+                continue
+            ctxs2.append(item)
+            cset.add(' '.join(item[0] + item[1]))
+
         # remove bad_ixs
         bad_ixs = set()
-        for ix, item in enumerate(ctxs):
+        for ix, item in enumerate(ctxs2):
             f = 0
-            for ij, item2 in enumerate(ctxs):
-                if ij != ix and item[::-1] == item2:
+            for item2 in ctxs2:
+                if item[::-1] == item2:
                     f = 1
                     break
             if not f:
@@ -140,28 +149,19 @@ class DNDContextGenerator(object):
                 bad_ixs.add(ix)
 
         # filter out bad ones.
-        ctxs2 = []
-        for ix, item in enumerate(ctxs):
+        ctxs3 = []
+        for ix, item in enumerate(ctxs2):
             if ix in bad_ixs:
                 continue
-            ctxs2.append(item)
-        
-        #only keep the unique ones
-        cset = set()
-        ctxs3 = []
-        for item in ctxs:
-            if ' '.join(item[0] + item[1]) in cset:
-                continue
             ctxs3.append(item)
-            cset.add(' '.join(item[0] + item[1]))
 
         self.ctxs = ctxs3[:]
 
         #validate
-        for ix, item in enumerate(self.ctxs):
+        for item in self.ctxs:
             f = 0
-            for ij, item2 in enumerate(self.ctxs):
-                if ij != ix and item[::-1] == item2:
+            for item2 in self.ctxs:
+                if item[::-1] == item2:
                     f = 1
                     break
             assert f, item
