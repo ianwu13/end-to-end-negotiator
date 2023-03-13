@@ -75,7 +75,7 @@ from models.dialog_model import DialogModel
 
 def is_pareto_optimal(obj):
     """Check whether the agreed deal is optimal."""
-    
+
     def compute_score(vals, picks):
         """Compute the score of the selection."""
         assert len(vals) == len(picks)
@@ -109,8 +109,8 @@ def is_pareto_optimal(obj):
 
     vals2 = [
         obj["ctxs"][names[1]][1],
-        obj["ctxs"][names[2]][3],
-        obj["ctxs"][names[3]][5],
+        obj["ctxs"][names[1]][3],
+        obj["ctxs"][names[1]][5],
     ]
 
     picks1 = [int(itt.split("=")[-1]) for itt in obj["choices"][names[0]]]
