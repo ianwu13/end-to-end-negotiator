@@ -113,6 +113,7 @@ def is_pareto_optimal(obj):
         obj["ctxs"][names[1]][5],
     ]
 
+    print(obj)
     picks1 = [int(itt.split("=")[-1]) for itt in obj["choices"][names[0]]]
     picks2 = [int(itt.split("=")[-1]) for itt in obj["choices"][names[1]]]
 
