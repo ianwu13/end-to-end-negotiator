@@ -26,3 +26,5 @@ Is the outcome prediction model separate already in the next paper? how is agree
 
 
 CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python bot_bot_play.py --models_dir ../../logs/ --conv_dir ../../logs/bot_bot/convs/ --context_file data/negotiate/test_dummy.txt --temperature 0.5 --ref_text data/negotiate/train.txt
+
+conda activate spr23
