@@ -161,6 +161,8 @@ def main():
     
     args = parser.parse_args()
 
+    print(args)
+
     device_id = utils.use_cuda(args.cuda)
     logging.info("Starting training using pytorch version:%s" % (str(torch.__version__)))
     logging.info("CUDA is %s" % ("enabled. Using device_id:"+str(device_id) + " version:" \

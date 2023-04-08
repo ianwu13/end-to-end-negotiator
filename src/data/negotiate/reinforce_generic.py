@@ -9,6 +9,14 @@ Reinforcement learning via Policy Gradient (REINFORCE).
 Perform RL in bulk on different reward definitions.
 
 Further, perform this reinforce RL in a general manner - against an ensemble of opponents.
+
+New hyperparameters
+
+- steps_per_opp: How long to train with a current opponent?
+- opp_models: List of models to train against.
+- sample_opp_wts: Weights to sample the opponent models from. Corresponds to the list of opponent models provided.
+- alice_model -> policy_model: The model that is being trained.
+- bob_model -> opp_models: The models that are being trained against.
 """
 
 import argparse
