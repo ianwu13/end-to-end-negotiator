@@ -174,12 +174,13 @@ def main():
         help='number of epochs per opponent')
     parser.add_argument('--num_opp_used', type=int, default=config.num_opp_used,
         help='How many times should we use an opponent to train with?')
-    parser.add_argument('--policy_model', type=str, default=config.policy_model,
+    parser.add_argument('--policy_model', type=str,
         help='The model that is being trained.')
-    parser.add_argument('opp_models', nargs='+', type=str,
-        help='The list of models that are being trained against.', required=True)
+    parser.add_argument('opp_models', type=str,
+        help='The list of models that are being trained against.')
     
     args = parser.parse_args()
+    args.opp_models = args.opp_models.split(',')
     print(args)
 
     device_id = utils.use_cuda(args.cuda)

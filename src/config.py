@@ -99,4 +99,3 @@ Default values for reinforce generic
 """
 rl_nepoch_per_opp = 1
 num_opp_used = 3
-policy_model = "../../logs/sv_model.pt"
