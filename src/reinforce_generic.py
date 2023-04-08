@@ -176,7 +176,7 @@ def main():
         help='How many times should we use an opponent to train with?')
     parser.add_argument('--policy_model', type=str, default=config.policy_model,
         help='The model that is being trained.')
-    parser.add_argument('opp_models', nargs='+', type=float, default=config.opp_models,
+    parser.add_argument('opp_models', nargs='+', type=str,
         help='The list of models that are being trained against.')
     
     args = parser.parse_args()
