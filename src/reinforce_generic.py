@@ -12,11 +12,10 @@ Further, perform this reinforce RL in a general manner - against an ensemble of 
 
 New hyperparameters
 
-- steps_per_opp: How long to train with a current opponent?
-- opp_models: List of models to train against.
-- sample_opp_wts: Weights to sample the opponent models from. Corresponds to the list of opponent models provided.
-- alice_model -> policy_model: The model that is being trained.
-- bob_model -> opp_models: The models that are being trained against.
+- nepoch -> nepoch_per_opp: How long to train with a current opponent?
+- num_opp_used: How many times should we use an opponent to train with?
+- alice_model_file -> policy_model: The model that is being trained.
+- bob_model_file -> opp_models: The models that are being trained against.
 """
 
 import argparse
@@ -30,6 +29,7 @@ import torch
 from torch import optim
 from torch import autograd
 import torch.nn as nn
+import copy
 
 import config
 import data
@@ -67,7 +67,7 @@ class Reinforce(object):
         N = len(self.corpus.word_dict)
 
         n = 0
-        for ctxs in self.ctx_gen.iter(self.args.nepoch):
+        for ctxs in self.ctx_gen.iter(self.args.nepoch_per_opp):
             n += 1
             if not n % 10:
                 logging.info(f"Num: {n}")
@@ -112,10 +112,10 @@ def main():
         help='location of the data corpus')
     parser.add_argument('--unk_threshold', type=int, default=config.unk_threshold,
         help='minimum word frequency to be in dictionary')
-    parser.add_argument('--alice_model_file', type=str,
-        help='Alice model file')
-    parser.add_argument('--bob_model_file', type=str,
-        help='Bob model file')
+    # parser.add_argument('--alice_model_file', type=str,
+    #     help='Alice model file')
+    # parser.add_argument('--bob_model_file', type=str,
+    #     help='Bob model file')
     parser.add_argument('--output_model_file', type=str,
         help='output model file')
     parser.add_argument('--context_file', type=str,
@@ -156,8 +156,8 @@ def main():
         help='batch size')
     parser.add_argument('--sv_train_freq', type=int, default=config.rl_sv_train_freq,
         help='supervision train frequency')
-    parser.add_argument('--nepoch', type=int, default=config.rl_nepoch,
-        help='number of epochs')
+    # parser.add_argument('--nepoch', type=int, default=config.rl_nepoch,
+    #     help='number of epochs')
     parser.add_argument('--visual', action='store_true', default=config.plot_graphs,
         help='plot graphs')
     parser.add_argument('--domain', type=str, default=config.domain,
@@ -169,7 +169,18 @@ def main():
     parser.add_argument('--rw_type', type=str, default=config.rw_type,
         help='reward type for the reinforce model.')
     
+    #kc args - define the new hyperparameters for reinforce generic
+    parser.add_argument('--nepoch_per_opp', type=int, default=config.rl_nepoch_per_opp,
+        help='number of epochs per opponent')
+    parser.add_argument('--num_opp_used', type=int, default=config.num_opp_used,
+        help='How many times should we use an opponent to train with?')
+    parser.add_argument('--policy_model', type=str, default=config.policy_model,
+        help='The model that is being trained.')
+    parser.add_argument('opp_models', nargs='+', type=float, default=config.opp_models,
+        help='The list of models that are being trained against.')
+    
     args = parser.parse_args()
+    print(args)
 
     device_id = utils.use_cuda(args.cuda)
     logging.info("Starting training using pytorch version:%s" % (str(torch.__version__)))
@@ -179,70 +190,84 @@ def main():
     # let's only support this for when the rw_type is utility
     assert args.rw_type == "utility", "Only utility reward type is supported for now."
 
-    #TODO: make it work against multiple opponents - define the hyps. required, write the code for the self-play.
-
     # train multiple models based on configurations in config.utilities
     print(f"Total configurations: {len(config.utility_configs)}")
 
-    conf_index = 0
-    
-    while conf_index < len(config.utility_configs):
+    for conf_index in range(len(config.utility_configs)):
         conf = config.utility_configs[conf_index]
 
         logging.info(f"Using config {conf_index}: {' '.join([str(ix) for ix in conf])}")
 
-        alice_model = utils.load_model(args.alice_model_file)
+        alice_model = utils.load_model(args.policy_model)
         # we don't want to use Dropout during RL
         alice_model.eval()
-        # Alice is a RL based agent, meaning that she will be learning while selfplaying
-        logging.info("Creating RlAgent from alice_model: %s" % (args.alice_model_file))
-        alice = RlAgent(alice_model, args, name='Alice')
 
-        # we keep Bob frozen, i.e. we don't update his parameters
-        logging.info("Creating Bob's (--smart_bob) LstmRolloutAgent" if args.smart_bob \
-            else "Creating Bob's (not --smart_bob) LstmAgent" )
-        bob_ty = LstmRolloutAgent if args.smart_bob else LstmAgent
-        bob_model = utils.load_model(args.bob_model_file)
-        bob_model.eval()
-        bob = bob_ty(bob_model, args, name='Bob')
+        prev_alice_model = copy.deepcopy(alice_model)
+        
+        opp_index = 0
+        
+        for opp_used_no in range(args.num_opp_used):
 
-        logging.info("Initializing communication dialogue between Alice and Bob")
-        dialog = Dialog([alice, bob], args, scale_rw=args.scale_rw, rw_type=args.rw_type, conf=conf)
-        logger = DialogLogger(verbose=args.verbose, log_file=args.log_file)
-        ctx_gen = ContextGenerator(args.context_file)
+            # we choose the next opponent model
+            logging.info(f"Use opponent {opp_used_no} of {args.num_opp_used}")
+            chosen_opp_model = args.opp_models[opp_index]
 
-        logging.info("Building word corpus, requiring minimum word frequency of %d for dictionary" % (args.unk_threshold))
-        corpus = data.WordCorpus(args.data, freq_cutoff=args.unk_threshold)
-        engine = Engine(alice_model, args, device_id, verbose=False)
-
-        logging.info("Starting Reinforcement Learning")
-        reinforce = Reinforce(dialog, ctx_gen, args, engine, corpus, logger)
-        try:
-            reinforce.run()
-        except RuntimeError:
-            print("runtime error caught !!!")
-
-        if global_counter >= 10000:
-            # atleast 10k iterations happened
+            while True:
+        
+                # Alice is a RL based agent, meaning that she will be learning while selfplaying
+                logging.info("Creating RlAgent from policy_model: %s" % (args.policy_model))
+                alice_model = copy.deepcopy(prev_alice_model)
+                alice = RlAgent(alice_model, args, name='Alice')
             
-            # reset the global counter
-            global_counter = 0
+                # we keep Bob frozen, i.e. we don't update his parameters
+                logging.info("Creating Bob's (--smart_bob) LstmRolloutAgent" if args.smart_bob \
+                    else "Creating Bob's (not --smart_bob) LstmAgent" )
+                bob_ty = LstmRolloutAgent if args.smart_bob else LstmAgent
+                bob_model = utils.load_model(chosen_opp_model)
+                bob_model.eval()
+                bob = bob_ty(bob_model, args, name='Bob')
 
-            # save the trained model.
-            out_path = f"{args.output_model_file.replace('.pt', '')}_rw_{args.rw_type}_{'_'.join([str(ix) for ix in conf])}.pt"
-            logging.info("Saving updated Alice model to %s" % (out_path))
-            utils.save_model(alice.model, out_path)
+                logging.info("Initializing communication dialogue between Alice and Bob")
+                dialog = Dialog([alice, bob], args, scale_rw=args.scale_rw, rw_type=args.rw_type, conf=conf)
+                logger = DialogLogger(verbose=args.verbose, log_file=args.log_file)
+                ctx_gen = ContextGenerator(args.context_file)
 
-            #move to the next conf
-            conf_index += 1
-        else:
-            # redo the current conf; we could not get enough configurations.
+                logging.info("Building word corpus, requiring minimum word frequency of %d for dictionary" % (args.unk_threshold))
+                corpus = data.WordCorpus(args.data, freq_cutoff=args.unk_threshold)
+                engine = Engine(alice_model, args, device_id, verbose=False)
 
-            # reset the global counter
-            global_counter = 0
+                logging.info("Starting Reinforcement Learning")
+                reinforce = Reinforce(dialog, ctx_gen, args, engine, corpus, logger)
+                try:
+                    reinforce.run()
+                except RuntimeError:
+                    print("runtime error caught !!!")
 
-            #stay at the current conf
-            conf_index = conf_index
+                if global_counter >= 2500*args.nepoch_per_opp:
+                    # atleast some significant iterations happened properly
+                    
+                    # reset the global counter
+                    global_counter = 0
+
+                    # update the prev model
+                    prev_alice_model = copy.deepcopy(alice.model)
+
+                    #now break out of the loop to continue to the next opponent.
+                    break
+
+                else:
+                    # redo the current opp; we could not get enough iterations with the current opponent.
+
+                    # reset the global counter
+                    global_counter = 0
+
+            # out of the while loop; so we are done with this opponent.
+            opp_index += 1
+            opp_index = opp_index % len(args.opp_models)
+
+        out_path = f"{args.output_model_file.replace('.pt', '')}_generic_rw_{args.rw_type}_{'_'.join([str(ix) for ix in conf])}.pt"
+        logging.info("Saving updated Alice model to %s" % (out_path))
+        utils.save_model(prev_alice_model, out_path)
 
 
 if __name__ == '__main__':
