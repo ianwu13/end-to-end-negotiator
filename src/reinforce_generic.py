@@ -210,7 +210,7 @@ def main():
         for opp_used_no in range(args.num_opp_used):
 
             # we choose the next opponent model
-            logging.info(f"Use opponent {opp_used_no} of {args.num_opp_used}")
+            logging.info(f"Use opponent {opp_used_no + 1} of {args.num_opp_used}")
             chosen_opp_model = args.opp_models[opp_index]
 
             while True:
@@ -223,6 +223,7 @@ def main():
                 # we keep Bob frozen, i.e. we don't update his parameters
                 logging.info("Creating Bob's (--smart_bob) LstmRolloutAgent" if args.smart_bob \
                     else "Creating Bob's (not --smart_bob) LstmAgent" )
+                logging.info("Creating Bob from chosen_opp_model: %s" % (chosen_opp_model))
                 bob_ty = LstmRolloutAgent if args.smart_bob else LstmAgent
                 bob_model = utils.load_model(chosen_opp_model)
                 bob_model.eval()
