@@ -271,6 +271,19 @@ class ObjectDivisionDomain(Domain):
 
             return agree, utility_scores
         
+        if rw_type == "fair":
+            # use the utility function with a fixed fair objective
+            
+            scores = scores[:]
+            rev_scores = scores[::-1]
+
+            utility_scores = []
+            for s, rs in zip(scores, rev_scores):
+                comb = max([0, 1*s + 0*rs + (-0.75)*max([0, rs - s]) + (-0.75)*max([0, s - rs])])
+                utility_scores.append(comb)
+
+            return agree, utility_scores
+        
         raise ValueError
     
     def score_choices_old(self, choices, ctxs):
