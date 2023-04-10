@@ -75,13 +75,24 @@ def prob_random():
 
 def get_model_names(models_dir):
     """Get all model names inside this dir."""
+
     model_names = []
 
-    for item in os.listdir(models_dir):
-        if os.path.isfile(os.path.join(models_dir, item)):
-            assert "rl_model" in item or "sv_model" in item
-            assert ".pt" in item
-            model_names.append(item)
+    model_names = [
+        "sv_model.pt",
+        "rl_model_rw_utility_1_0_0_0.pt",
+        "rl_model_rw_utility_1_0_-0.75_-0.75.pt",
+        "rl_selfish_ag_fair_rw_own_points.pt",
+        "rl_selfish_ag_selfish_rw_own_points.pt",
+        "rl_fair_ag_fair_rw_fair.pt",
+        "rl_fair_ag_selfish_rw_fair.pt",
+    ]
+
+    # for item in os.listdir(models_dir):
+    #     if os.path.isfile(os.path.join(models_dir, item)):
+    #         assert "rl_model" in item or "sv_model" in item
+    #         assert ".pt" in item
+    #         model_names.append(item)
     
     return sorted(model_names)
 
