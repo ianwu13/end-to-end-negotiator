@@ -123,7 +123,7 @@ def model_resp():
       return json.dumps(data)
   
   # get the response from the model
-  resp_obj, store_obj = utils.get_model_resp(payload, STORAGE["users"]["user_data"][payload["randomId"]])
+  resp_obj, store_obj = utils.get_model_resp(payload, STORAGE["users"]["user_data"][payload["randomId"]]["lioness"])
 
   #update internal storage using store_obj
   global STORAGE
