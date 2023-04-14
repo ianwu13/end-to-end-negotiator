@@ -7,6 +7,7 @@ app = Flask(__name__)
 #global: to be initialized in initial_setup - a common storage variable for everything, including initiated models and current states of each of the users.
 STORAGE = {}
 
+
 def initial_setup():
   """
   Initial setup for the server
