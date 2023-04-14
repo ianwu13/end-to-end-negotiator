@@ -39,6 +39,7 @@ def initial_setup():
   global SERVER_STATUS
   SERVER_STATUS = "Ready"
 
+
 @app.route('/setup_new_user/', methods=['POST'])
 def setup_new_user():
   """
