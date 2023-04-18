@@ -2,7 +2,7 @@ import os
 import random
 import numpy as np
 import torch
-from models.dialog_model import DialogModel
+from models.dialog_models import DialogModel
 import data
 from agent import LstmAgent
 from torch.autograd import Variable
