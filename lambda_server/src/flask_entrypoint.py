@@ -1,3 +1,4 @@
+import copy
 import random
 from flask import Flask
 from flask import request
@@ -200,11 +201,11 @@ def report_stats():
 
   # add a sample user data
   if len(STORAGE["users"]["user_data"]) > 0:
-    data["sample_user_data"] = list(STORAGE["users"]["user_data"].values())[0]
+    data["sample_user_data"] = copy.deepcopy(list(STORAGE["users"]["user_data"].values())[0])
     # make any tensor json serializable
-    for k, v in data["sample_user_data"]["lioness"].items():
-      if isinstance(v, torch.Tensor):
-        data["sample_user_data"]["lioness"][k] = v.tolist()
+    del data["sample_user_data"]["lioness"]["lang_h"]
+    del data["sample_user_data"]["lioness"]["ctx_h"]
+    del data["sample_user_data"]["lioness"]["lang_hs"]
   
   return json.dumps(data)
 
