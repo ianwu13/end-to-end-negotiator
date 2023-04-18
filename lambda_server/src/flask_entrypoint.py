@@ -3,7 +3,7 @@ from flask import Flask
 from flask import request
 from flask import json
 
-from src import utils
+import utils
 
 app = Flask(__name__)
 
