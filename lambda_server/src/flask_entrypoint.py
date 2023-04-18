@@ -2,7 +2,7 @@ import random
 from flask import Flask
 from flask import request
 from flask import json
-
+import torch
 import utils
 
 app = Flask(__name__)
@@ -201,6 +201,10 @@ def report_stats():
   # add a sample user data
   if len(STORAGE["users"]["user_data"]) > 0:
     data["sample_user_data"] = list(STORAGE["users"]["user_data"].values())[0]
+    # make any tensor json serializable
+    for k, v in data["sample_user_data"]["lioness"].items():
+      if isinstance(v, torch.Tensor):
+        data["sample_user_data"]["lioness"][k] = v.tolist()
   
   return json.dumps(data)
 
