@@ -312,27 +312,27 @@ def get_model_resp(payload, model_obj, lioness_obj):
         conv.append(utt_obj)
     
     # see if the human has already outputted a selection token
-    if conv and conv[-1]["name"] == "human" and _is_selection(conv[-1]["sent"]):
+    if conv and conv[-1]["name"] == "human" and _is_selection(conv[-1]["sent"].split()):
         # agent response is just the selection token
-        resp = "<selection>"
+        resp = ["<selection>"]
     else:
         # no sign of conv being over; get the model response
         resp_tokens, lang_h, ctx_h, lang_hs, words = write(model_obj, lang_h, ctx_h, lang_hs, words)
-        resp = " ".join(resp_tokens)
+        resp = resp_tokens
     
     # add the agent response to the conversation
     utt_obj = {
         "name": "agent",
-        "sent": resp,
+        "sent": " ".join(resp),
     }
     conv.append(utt_obj)
 
     # prepare outputs
     out_resp_obj = {
-        "resp": make_safe(resp),
+        "resp": make_safe(" ".join(resp)),
     }
 
-    if _is_selection(conv[-1]["sent"]):
+    if _is_selection(conv[-1]["sent"].split()):
         agent_choice = make_choice(model_obj, lang_h, ctx_h, lang_hs, words, agent_cxt)
         out_resp_obj["agent_choice"] = agent_choice
 
