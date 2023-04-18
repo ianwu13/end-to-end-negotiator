@@ -1,4 +1,3 @@
-import copy
 import random
 from flask import Flask
 from flask import request
@@ -201,12 +200,11 @@ def report_stats():
 
   # add a sample user data
   if len(STORAGE["users"]["user_data"]) > 0:
-    data["sample_user_data"] = copy.deepcopy(list(STORAGE["users"]["user_data"].values())[0])
-    # make any tensor json serializable
-    del data["sample_user_data"]["lioness"]["lang_h"]
-    del data["sample_user_data"]["lioness"]["ctx_h"]
-    del data["sample_user_data"]["lioness"]["lang_hs"]
-  
+    data["sample_user_data"] = {
+      "words": STORAGE["users"]["user_data"][list(STORAGE["users"]["user_data"].keys())[0]]["lioness"]["words"],
+      "conv": STORAGE["users"]["user_data"][list(STORAGE["users"]["user_data"].keys())[0]]["lioness"]["conv"],
+    }
+    
   return json.dumps(data)
 
 
