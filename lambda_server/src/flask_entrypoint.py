@@ -97,6 +97,9 @@ def setup_new_user():
 def model_resp():
   """
   Get model response - interface for all the cases possible. The method in utils processes the request, and returns the response object (that is sent out), and storage obj (that is used to update the lioness storage for the user).
+
+  Input payload must contain randomId, model, cxt, and any human utterance.
+
   """
   global STORAGE
   if SERVER_STATUS != "Ready":

@@ -268,7 +268,7 @@ def make_safe(utt):
     return utt
 
 
-def get_model_response(payload, model_obj, lioness_obj):
+def get_model_resp(payload, model_obj, lioness_obj):
     """
     Get model response.
     payload: input payload from the UI
