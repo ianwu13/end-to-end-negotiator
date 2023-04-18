@@ -318,14 +318,14 @@ def get_model_resp(payload, model_obj, lioness_obj):
     }
     conv.append(utt_obj)
 
-    if "<selection>" in conv[-1]:
-        agent_chose = make_choice(model_obj, lang_h, ctx_h, lang_hs, words, agent_cxt)
-
     # prepare outputs
     out_resp_obj = {
         "resp": make_safe(resp),
-        "meta": agent_chose
     }
+
+    if "<selection>" in conv[-1]:
+        agent_choice = make_choice(model_obj, lang_h, ctx_h, lang_hs, words, agent_cxt)
+        out_resp_obj["agent_choice"] = agent_choice
 
     out_lioness_obj = {
         "lang_h": lang_h,
