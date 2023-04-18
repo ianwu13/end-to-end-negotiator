@@ -148,10 +148,11 @@ def load_context_pairs():
     Load context pairs.
     """
     ctx_gen = DNDContextGenerator("data/negotiate/test.txt")
-    # goes through the list of contexes and kicks off a dialogue
+    # goes through the list of contexes and returns a list of strings
     all_ctxs = []
     for ctxs in ctx_gen.iter():
-        all_ctxs.append(ctxs)
+        ctxs_str = " ".join(ctxs[0] + ctxs[1])
+        all_ctxs.append(ctxs_str)
     return all_ctxs
 
 
@@ -281,7 +282,7 @@ def get_model_response(payload, model_obj, lioness_obj):
     """
     
     # agent cxt
-    agent_cxt = payload["cxt"][-1] # assumed order is (human, agent)
+    agent_cxt = payload["cxt"].split()[6:] # assumed order is (human, agent)
 
     if not lioness_obj:
         # feed in the context

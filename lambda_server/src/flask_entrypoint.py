@@ -63,7 +63,7 @@ def setup_new_user():
 
   # pick a new model, cxt pair that is not in mod_cxt_used
   chosen_mod_cxt = None
-  for mod in STORAGE["static"]["name2mod"]:
+  for mod in STORAGE["static"]["name2mod"].keys():
     for cxt in STORAGE["static"]["ctx_pairs"]:
       if (mod, cxt) not in STORAGE["users"]["mod_cxt_used"]:
         chosen_mod_cxt = (mod, cxt)
@@ -194,6 +194,10 @@ def report_stats():
   data["num_contexts"] = len(STORAGE["static"]["ctx_pairs"])
   data["num_mod_cxt_used"] = f'{len(STORAGE["users"]["mod_cxt_used"])} / {len(STORAGE["static"]["name2mod"]) * len(STORAGE["static"]["ctx_pairs"])}'
   data["num_users_served"] = len(STORAGE["users"]["user_data"])
+
+  # add a sample user data
+  if len(STORAGE["users"]["user_data"]) > 0:
+    data["sample_user_data"] = list(STORAGE["users"]["user_data"].values())[0]
   
   return json.dumps(data)
 
