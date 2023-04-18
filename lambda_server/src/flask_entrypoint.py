@@ -198,12 +198,10 @@ def report_stats():
   data["num_mod_cxt_used"] = f'{len(STORAGE["users"]["mod_cxt_used"])} / {len(STORAGE["static"]["name2mod"]) * len(STORAGE["static"]["ctx_pairs"])}'
   data["num_users_served"] = len(STORAGE["users"]["user_data"])
 
-  # add a sample user data
+  # print a sample user data
   if len(STORAGE["users"]["user_data"]) > 0:
-    data["sample_user_data"] = {
-      "words": STORAGE["users"]["user_data"][list(STORAGE["users"]["user_data"].keys())[0]]["lioness"]["words"],
-      "conv": STORAGE["users"]["user_data"][list(STORAGE["users"]["user_data"].keys())[0]]["lioness"]["conv"],
-    }
+    print("Sample user data:")
+    print(list(STORAGE["users"]["user_data"].values())[0])
     
   return json.dumps(data)
 
