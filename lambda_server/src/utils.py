@@ -147,7 +147,7 @@ def load_context_pairs():
     """
     Load context pairs.
     """
-    ctx_gen = DNDContextGenerator("cxts/test.txt")
+    ctx_gen = DNDContextGenerator("data/negotiate/test.txt")
     # goes through the list of contexes and kicks off a dialogue
     all_ctxs = []
     for ctxs in ctx_gen.iter():
