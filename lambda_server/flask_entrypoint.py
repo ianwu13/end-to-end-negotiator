@@ -22,6 +22,7 @@ def initial_setup():
     - Load context pairs and be ready for answering the requests.
   """
   global STORAGE
+  global SERVER_STATUS
 
   # load all the models - mod is the model object that will be used for reading, writing, etc.
   name2mod = utils.load_models()
@@ -36,7 +37,7 @@ def initial_setup():
   STORAGE["users"]["user_data"] = {} # dict from random IDs to everything related to a specific user, model, cxt, and all lioness interaction.
 
   # mark the server as ready
-  global SERVER_STATUS
+  
   SERVER_STATUS = "Ready"
 
 
@@ -48,7 +49,8 @@ def setup_new_user():
    - save the model, context and random id in the storage.
    - mark this triplet as used.
   """
-  
+  global STORAGE
+
   if SERVER_STATUS != "Ready":
     # server is not yet ready with the initial setup.
     data = {}
@@ -75,7 +77,6 @@ def setup_new_user():
     chosen_mod_cxt = (random.choice(list(STORAGE["static"]["name2mod"].keys())), random.choice(STORAGE["static"]["ctx_pairs"]))
   
   # update the storage appropriately
-  global STORAGE
   STORAGE["users"]["mod_cxt_used"].add(chosen_mod_cxt)
   STORAGE["users"]["user_data"][randomId] = {
     "model": chosen_mod_cxt[0],
@@ -97,7 +98,7 @@ def model_resp():
   """
   Get model response - interface for all the cases possible. The method in utils processes the request, and returns the response object (that is sent out), and storage obj (that is used to update the lioness storage for the user).
   """
-
+  global STORAGE
   if SERVER_STATUS != "Ready":
     # server is not yet ready with the initial setup.
     data = {}
@@ -127,7 +128,6 @@ def model_resp():
   resp_obj, store_obj = utils.get_model_resp(payload, STORAGE["users"]["user_data"][payload["randomId"]]["lioness"])
 
   #update internal storage using store_obj
-  global STORAGE
   STORAGE["users"]["user_data"][payload["randomId"]]["lioness"] = store_obj
 
   # output
@@ -143,6 +143,7 @@ def reset():
   Reset the internal states, as if no user has been connected to the server yet, after the server has been started. You can still keep the models loaded.
   This is useful for debugging.
   """
+  global STORAGE
 
   if SERVER_STATUS != "Ready":
     # server is not yet ready with the initial setup.
@@ -152,7 +153,7 @@ def reset():
     return json.dumps(data)
 
   # re-initialize the storage for users
-  global STORAGE
+  
   STORAGE["users"]["mod_cxt_used"] = set()
   STORAGE["users"]["user_data"] = {}
   
