@@ -268,6 +268,10 @@ def make_safe(utt):
     return utt
 
 
+def _is_selection(out):
+    return len(out) == 1 and out[0] == '<selection>'
+
+
 def get_model_resp(payload, model_obj, lioness_obj):
     """
     Get model response.
@@ -277,7 +281,7 @@ def get_model_resp(payload, model_obj, lioness_obj):
 
     model states to remember:
      - lang_h, ctx_h, lang_hs, words
-     - conv
+     - conv (uses name for human vs agent, sent is raw without you and them, and sent is also unsafe. it contains <eos> tokens only when there is no <selection> token.)
 
     """
     
@@ -295,6 +299,11 @@ def get_model_resp(payload, model_obj, lioness_obj):
     if payload["human_utt"]:
         # the human has said something new; read it before writing
         utt_tokens = make_unsafe(payload["human_utt"]).strip().lower().split()
+        
+        if not _is_selection(utt_tokens):
+            # if the human has not said the selection token, add the end of utterance token
+            utt_tokens += ["<eos>"]
+        
         lang_h, ctx_h, lang_hs, words = read(model_obj, lang_h, ctx_h, lang_hs, words, utt_tokens)
         utt_obj = {
             "name": "human",
@@ -303,7 +312,7 @@ def get_model_resp(payload, model_obj, lioness_obj):
         conv.append(utt_obj)
     
     # see if the human has already outputted a selection token
-    if conv and conv[-1]["name"] == "human" and "<selection>" in conv[-1]["sent"]:
+    if conv and conv[-1]["name"] == "human" and _is_selection(conv[-1]["sent"]):
         # agent response is just the selection token
         resp = "<selection>"
     else:
@@ -323,7 +332,7 @@ def get_model_resp(payload, model_obj, lioness_obj):
         "resp": make_safe(resp),
     }
 
-    if "<selection>" in conv[-1]:
+    if _is_selection(conv[-1]["sent"]):
         agent_choice = make_choice(model_obj, lang_h, ctx_h, lang_hs, words, agent_cxt)
         out_resp_obj["agent_choice"] = agent_choice
 
