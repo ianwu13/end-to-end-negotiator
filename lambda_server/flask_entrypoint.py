@@ -116,7 +116,7 @@ def model_resp():
     return json.dumps(data)
   else:
     # check if the model and cxt are valid
-    if payload["model"] != STORAGE["users"]["user_data"][payload["randomId"]]["model"] or payload["cxt"] != STORAGE["users"]["user_data"][payload["randomId"]]["cxt"]:
+    if (payload["model"] != STORAGE["users"]["user_data"][payload["randomId"]]["model"]) or (payload["cxt"] != STORAGE["users"]["user_data"][payload["randomId"]]["cxt"]):
       # invalid model or cxt
       data = {}
       data["status"] = "Error"
@@ -124,7 +124,10 @@ def model_resp():
       return json.dumps(data)
   
   # get the response from the model
-  resp_obj, store_obj = utils.get_model_resp(payload, STORAGE["users"]["user_data"][payload["randomId"]]["lioness"])
+  model_obj = STORAGE["static"]["name2mod"][payload["model"]]
+  lioness_obj = STORAGE["users"]["user_data"][payload["randomId"]]["lioness"]
+
+  resp_obj, store_obj = utils.get_model_resp(payload, model_obj, lioness_obj)
 
   #update internal storage using store_obj
   global STORAGE
@@ -133,6 +136,8 @@ def model_resp():
   # output
   data = {}
   data["status"] = "Success"
+  data["model"] = payload["model"]
+  data["cxt"] = payload["cxt"]
   data["response"] = resp_obj
   return json.dumps(data)
 
