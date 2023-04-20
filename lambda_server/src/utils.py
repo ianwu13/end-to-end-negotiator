@@ -337,6 +337,7 @@ def get_model_resp(payload, model_obj, lioness_obj):
 
     if _is_selection(conv[-1]["sent"].split()):
         agent_choice = make_choice(model_obj, lang_h, ctx_h, lang_hs, words, agent_cxt)
+        agent_choice = [make_safe(c) for c in agent_choice]
         out_resp_obj["agent_choice"] = agent_choice
 
     out_lioness_obj = {
