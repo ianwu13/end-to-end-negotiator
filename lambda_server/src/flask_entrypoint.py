@@ -24,13 +24,13 @@ def initial_setup():
   global STORAGE
   global SERVER_STATUS
 
+  # load potential model, context pairs from the json.
+  with open("data/negotiate/mod_cxt_pairs.json", "r") as f:
+    STORAGE["static"]["mod_cxt_all"] = [tuple(item) for item in json.load(f)["mod_cxt_pairs"]]
+
   # load all the models - mod is the model object that will be used for reading, writing, etc.
   name2mod = utils.load_models()
   STORAGE["static"]["name2mod"] = name2mod
-
-  # load all context pairs - assume a fixed order - (Human, Agent)
-  ctx_pairs = utils.load_context_pairs()
-  STORAGE["static"]["ctx_pairs"] = ctx_pairs
 
   # initialize the storage for users
   STORAGE["users"]["mod_cxt_used"] = set() # set of (model, context) pairs that have been used.
@@ -63,18 +63,15 @@ def setup_new_user():
 
   # pick a new model, cxt pair that is not in mod_cxt_used
   chosen_mod_cxt = None
-  for mod in STORAGE["static"]["name2mod"].keys():
-    for cxt in STORAGE["static"]["ctx_pairs"]:
-      if (mod, cxt) not in STORAGE["users"]["mod_cxt_used"]:
-        chosen_mod_cxt = (mod, cxt)
-        break
-    if chosen_mod_cxt:
+  for mod_cxt_pair in STORAGE["static"]["mod_cxt_all"]:
+    if mod_cxt_pair not in STORAGE["users"]["mod_cxt_used"]:
+      chosen_mod_cxt = mod_cxt_pair
       break
   
-  # if no new model, cxt pair is available, return an error
+  # if no new model, cxt pair is available, pick a pair at random
   if not chosen_mod_cxt:
     # choose any model and a cxt pair at random
-    chosen_mod_cxt = (random.choice(list(STORAGE["static"]["name2mod"].keys())), random.choice(STORAGE["static"]["ctx_pairs"]))
+    chosen_mod_cxt = random.choice(STORAGE["static"]["mod_cxt_all"])
   
   # update the storage appropriately
   STORAGE["users"]["mod_cxt_used"].add(chosen_mod_cxt)
@@ -188,8 +185,7 @@ def report_stats():
   data["server_status"] = SERVER_STATUS
   data["num_models"] = len(STORAGE["static"]["name2mod"])
   data["model_names"] = list(STORAGE["static"]["name2mod"].keys())
-  data["num_contexts"] = len(STORAGE["static"]["ctx_pairs"])
-  data["num_mod_cxt_used"] = f'{len(STORAGE["users"]["mod_cxt_used"])} / {len(STORAGE["static"]["name2mod"]) * len(STORAGE["static"]["ctx_pairs"])}'
+  data["num_mod_cxt_used"] = f'{len(STORAGE["users"]["mod_cxt_used"])} / {len(STORAGE["static"]["mod_cxt_all"])}'
   data["num_users_served"] = len(STORAGE["users"]["user_data"])
 
   # print a sample user data
