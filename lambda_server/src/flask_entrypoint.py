@@ -45,7 +45,7 @@ def initial_setup():
 def setup_new_user():
   """
   Setup for a new user - build the connection.
-   - return a new (model, context, random id)
+   - return a new random id, and human context, for the user.
    - save the model, context and random id in the storage.
    - mark this triplet as used.
   """
@@ -88,8 +88,7 @@ def setup_new_user():
   data = {}
   data["status"] = "Success"
   data["randomId"] = randomId
-  data["model"] = chosen_mod_cxt[0]
-  data["cxt"] = chosen_mod_cxt[1]
+  data["user_cxt"] = " ".join(chosen_mod_cxt[1].split()[:6]) # only send out the human context.
   return json.dumps(data)
 
 
@@ -118,20 +117,16 @@ def model_resp():
     data["status"] = "Error"
     data["error_description"] = "Invalid randomId. Please check the randomId and try again."
     return json.dumps(data)
-  else:
-    # check if the model and cxt are valid
-    if (payload["model"] != STORAGE["users"]["user_data"][payload["randomId"]]["model"]) or (payload["cxt"] != STORAGE["users"]["user_data"][payload["randomId"]]["cxt"]):
-      # invalid model or cxt
-      data = {}
-      data["status"] = "Error"
-      data["error_description"] = "Invalid model or cxt. Please check the model and cxt and try again."
-      return json.dumps(data)
   
+  # get the model and cxt from the storage
+  model_name = STORAGE["users"]["user_data"][payload["randomId"]]["model"]
+  cxt = STORAGE["users"]["user_data"][payload["randomId"]]["cxt"]
+
   # get the response from the model
-  model_obj = STORAGE["static"]["name2mod"][payload["model"]]
+  model_obj = STORAGE["static"]["name2mod"][model_name]
   lioness_obj = STORAGE["users"]["user_data"][payload["randomId"]]["lioness"]
 
-  resp_obj, store_obj = utils.get_model_resp(payload, model_obj, lioness_obj)
+  resp_obj, store_obj = utils.get_model_resp(cxt, payload["human_utt"], model_obj, lioness_obj)
 
   #update internal storage using store_obj
   STORAGE["users"]["user_data"][payload["randomId"]]["lioness"] = store_obj
@@ -139,8 +134,7 @@ def model_resp():
   # output
   data = {}
   data["status"] = "Success"
-  data["model"] = payload["model"]
-  data["cxt"] = payload["cxt"]
+  data["randomId"] = payload["randomId"]
   data["response"] = resp_obj
   return json.dumps(data)
 

@@ -275,10 +275,11 @@ def _is_selection(out):
     return len(out) == 1 and out[0] == '<selection>'
 
 
-def get_model_resp(payload, model_obj, lioness_obj):
+def get_model_resp(cxt, human_utt, model_obj, lioness_obj):
     """
     Get model response.
-    payload: input payload from the UI
+    cxt: full context from the storage
+    human_utt: human utterance from the payload (if any)
     model_obj: current model object for the user
     lioness_obj: current lioness storage object for the user
 
@@ -289,7 +290,7 @@ def get_model_resp(payload, model_obj, lioness_obj):
     """
     
     # agent cxt
-    agent_cxt = payload["cxt"].split()[6:] # assumed order is (human, agent)
+    agent_cxt = cxt.split()[6:] # assumed order is (human, agent)
 
     if not lioness_obj:
         # feed in the context
@@ -299,9 +300,9 @@ def get_model_resp(payload, model_obj, lioness_obj):
         # get the lioness states
         lang_h, ctx_h, lang_hs, words, conv = lioness_obj["lang_h"], lioness_obj["ctx_h"], lioness_obj["lang_hs"], lioness_obj["words"], lioness_obj["conv"]
 
-    if payload["human_utt"]:
+    if human_utt:
         # the human has said something new; read it before writing
-        utt_tokens = make_unsafe(payload["human_utt"]).strip().lower().split()
+        utt_tokens = make_unsafe(human_utt).strip().lower().split()
         
         if not _is_selection(utt_tokens):
             # if the human has not said the selection token, add the end of utterance token
