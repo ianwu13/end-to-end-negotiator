@@ -1,5 +1,6 @@
 import os
 import random
+import string
 import numpy as np
 import torch
 from models.dialog_models import DialogModel
@@ -7,6 +8,23 @@ import data
 from agent import LstmAgent
 from torch.autograd import Variable
 import torch.nn.functional as F
+
+ALPHABET = string.ascii_letters + string.digits + "_ ."
+
+def encode(message, key):
+    # Create a dictionary that maps each character to its corresponding substitution
+    mapping = dict(zip(ALPHABET, key))
+    # Use the mapping to substitute each character in the message
+    ciphertext = ''.join([mapping.get(c, c) for c in message])
+    return ciphertext
+
+
+def decode(ciphertext, key):
+    # Create a dictionary that maps each substitution to its corresponding character
+    mapping = dict(zip(key, ALPHABET))
+    # Use the mapping to substitute each character in the ciphertext
+    message = ''.join([mapping.get(c, c) for c in ciphertext])
+    return message
 
 
 def use_cuda(enabled, device_id=0):

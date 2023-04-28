@@ -85,7 +85,9 @@ def setup_new_user():
   data = {}
   data["status"] = "Success"
   data["randomId"] = randomId
-  data["user_cxt"] = " ".join(chosen_mod_cxt[1].split()[:6]) # only send out the human context.
+  data["hct"] = " ".join(chosen_mod_cxt[1].split()[:6])
+  data["agct"] = utils.encode(" ".join(chosen_mod_cxt[1].split()[6:]), key="")
+  data["agm"] = utils.encode(chosen_mod_cxt[0], key="")
   return json.dumps(data)
 
 
