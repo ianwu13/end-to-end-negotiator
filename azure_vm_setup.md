@@ -21,9 +21,9 @@ sudo apt-get -y install cuda-drivers
 # Create Virtual Env
 ```
 # Install anaconda
-conda create -n py30 python=3 anaconda
+conda create -n e2e python=3 anaconda
 # Activate environment
-source activate py30
+source activate e2e
 # Install PyTorch
 conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
 # Install Visdom if you want to use visualization
