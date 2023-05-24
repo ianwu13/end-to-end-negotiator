@@ -1,0 +1,173 @@
+{
+    "uuid": "E_QKqgvpMitAUvhKCf",
+    "scenario": {
+        "attributes": [
+            {
+                "multivalued": false,
+                "unique": false,
+                "value_type": "item",
+                "name": "Name",
+                "entity": true
+            },
+            {
+                "multivalued": false,
+                "unique": false,
+                "value_type": "integer",
+                "name": "Name",
+                "entity": true
+            },
+            {
+                "multivalued": false,
+                "unique": false,
+                "value_type": "integer",
+                "name": "Name",
+                "entity": true
+            }
+        ],
+        "uuid": "FB_UYOTjJTGt6qBUXtR",
+        "kbs": [
+            [
+                {
+                    "Count": 3,
+                    "Name": "book",
+                    "Value": 3
+                },
+                {
+                    "Count": 3,
+                    "Name": "hat",
+                    "Value": 0
+                },
+                {
+                    "Count": 1,
+                    "Name": "ball",
+                    "Value": 1
+                }
+            ],
+            [
+                {
+                    "Count": 3,
+                    "Name": "book",
+                    "Value": 2
+                },
+                {
+                    "Count": 3,
+                    "Name": "hat",
+                    "Value": 1
+                },
+                {
+                    "Count": 1,
+                    "Name": "ball",
+                    "Value": 1
+                }
+            ]
+        ]
+    },
+    "agents_info": {},
+    "scenario_uuid": "FB_UYOTjJTGt6qBUXtR",
+    "agents": {
+        "0": "human",
+        "1": "human"
+    },
+    "outcome": {
+        "valid_deal": true,
+        "item_split": [
+            {
+                "book": 2,
+                "hat": 0,
+                "ball": 1
+            },
+            {
+                "book": 1,
+                "hat": 3,
+                "ball": 0
+            }
+        ],
+        "reward": {
+            "0": 7,
+            "1": 5
+        },
+        "agreed": true
+    },
+    "events": [
+        {
+            "start_time": 1526674258.810178,
+            "agent": 0,
+            "template": null,
+            "time": 0,
+            "action": "message",
+            "data": "im a reader , so id like the books . . . . you may have the hats and ball"
+        },
+        {
+            "start_time": 1526674258.810182,
+            "agent": 1,
+            "template": null,
+            "time": 1,
+            "action": "message",
+            "data": "let me have two books and the hats"
+        },
+        {
+            "start_time": 1526674258.810184,
+            "agent": 0,
+            "template": null,
+            "time": 2,
+            "action": "message",
+            "data": "its a trilogy so i really need to hold on to all the books"
+        },
+        {
+            "start_time": 1526674258.810186,
+            "agent": 1,
+            "template": null,
+            "time": 3,
+            "action": "message",
+            "data": "cant do it"
+        },
+        {
+            "start_time": 1526674258.81019,
+            "agent": 0,
+            "template": null,
+            "time": 4,
+            "action": "message",
+            "data": "ok , well best i can do is 2 books and the ball then . . . anything less and i cant make a deal"
+        },
+        {
+            "start_time": 1526674258.810191,
+            "agent": 1,
+            "template": null,
+            "time": 5,
+            "action": "message",
+            "data": "so the hats and a book for me ?"
+        },
+        {
+            "start_time": 1526674258.810192,
+            "agent": 0,
+            "template": null,
+            "time": 6,
+            "action": "message",
+            "data": "yes"
+        },
+        {
+            "start_time": 1526674258.810194,
+            "agent": 1,
+            "template": null,
+            "time": 7,
+            "action": "select",
+            "data": {
+                "book": 1,
+                "hat": 3,
+                "ball": 0
+            }
+        },
+        {
+            "start_time": 1526674258.810195,
+            "agent": 0,
+            "template": null,
+            "time": 8,
+            "action": "select",
+            "data": {
+                "book": 2,
+                "hat": 0,
+                "ball": 1
+            }
+        }
+    ]
+}
