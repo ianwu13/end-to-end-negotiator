@@ -56,16 +56,16 @@ def get_ex(dia: str):
 
     res = utt_lookup_map[key]
     if res is None:
-        print(dia)
-        print(key)
-        print()
-        raise Exception("res is None")
+        return None
+        # raise Exception("res is None")
+    '''
     else:
         print()
         print(dia)
         print('8'*100)
         print(' | '.join([e['data'] if type(e['data'])==str else 'SELECTION' for e in res['events']]))
         print()
+    '''
 
     return res
 

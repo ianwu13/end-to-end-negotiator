@@ -82,7 +82,10 @@ def parse_dialogue(dia: str):
     else:
         raise Exception(f'Agent cannot be identified from dialogue:\n\n{dia}\n\n')
 
-    ex = AttributeDict(get_ex(dia))
+    ex = get_ex(dia)
+    if ex is None:
+        return None
+    ex = AttributeDict(ex)
 
     dialogue = Dialogue(agent, ex.scenario['kbs'][agent],
                     ex.outcome, ex.uuid, model='lf2lf')
@@ -115,13 +118,12 @@ def parse_dialogue(dia: str):
             dialogue.add_utterance(e.agent, utterance, lf=e.metadata)
     
     # print(dialogue)
-
+    # print(dia.split('<eos>'))
     # print(dialogue.token_turns, '\n')
     # print(dialogue.lfs, '\n')
     # print(dialogue.turns, '\n')
     # print(dialogue.entities, '\n')
     # print(dialogue.agents, '\n')
-
 
     # OTHER TEST
     # print(ex.events)
@@ -129,7 +131,21 @@ def parse_dialogue(dia: str):
     # print([' '.join(u) for u in dialogue.token_turns])
     # raise Exception('DONE')
 
-    return ' '.join([' '.join(utt) for utt in dialogue.token_turns])
+    # Readjust dialogue token array
+    tok_turns = dialogue.token_turns
+    if len(tok_turns[0]) == 2:
+        tok_turns = tok_turns[1:]
+    for turn in tok_turns:
+        if agent == 1:
+            turn[0] = 'YOU:'
+            agent = 0
+        else:
+            turn[0] = 'THEM:'
+            agent = 1
+    assert(tok_turns[-1][-1] == '<eos>')
+    tok_turns[-1] = tok_turns[-1][:-1]
+
+    return ' '.join([' '.join(utt) for utt in tok_turns])
 
 
 def parse_output(out: str):
@@ -147,7 +163,10 @@ def parse_line(l: str):
 
     sp = sp[1].split(' </dialogue> ')
     assert(len(sp) == 2)
-    dia = ' '.join(['<dialogue>', parse_dialogue(sp[0].lstrip('<dialogue> ')), '</dialogue>'])
+    par_d = parse_dialogue(sp[0].lstrip('<dialogue> '))
+    if par_d is None:
+        return None
+    dia = ' '.join(['<dialogue>', par_d, '</dialogue>'])
 
     sp = sp[1].split(' </output> ')
     assert(len(sp) == 2)
@@ -162,7 +181,8 @@ def parse_file(f, out):
     line = f.readline()
     while line != '':
         p_line = parse_line(line)
-        out.write(p_line)
+        if p_line is not None:
+            out.write(p_line)
 
         line = f.readline()
 
