@@ -8,6 +8,8 @@ RUN FROM "src/data/cocoa/scripts"
 
 import argparse
 
+from prop_extract import *
+
 # <input> 1 4 4 1 1 2 </input>
 # <dialogue> THEM: i would like 4 hats and you can have the rest . <eos> YOU: deal <eos> THEM: <selection> </dialogue> 
 # <output> item0=1 item1=0 item2=1 item0=0 item1=4 item2=0 </output> 
@@ -18,15 +20,116 @@ def parse_inp(scn: str):
     # takes in like this: "1 4 4 1 1 2"
     
     # TODO
-    pass
+    return scn
+
+
+'''
+def parse_dialogue(dia: str):
+    # takes in like this: "THEM: i would like 4 hats and you can have the rest . <eos> YOU: deal <eos> THEM: <selection>"
+    # or this: ""
+
+    # TODO
+    if dia[0] == 'T':
+        agent = 0
+    elif dia[0] == 'Y':
+        agent = 1
+    else:
+        raise Exception(f'Agent cannot be identified from dialogue:\n\n{dia}\n\n')
+
+    ex = get_ex(dia)
+
+    for e in ex.events:
+
+        lf = e.metadata
+        proposal = None
+        assert lf is not None
+        # TODO: hack
+        if lf.get('proposal') is not None:
+            proposal = {'me': {}, 'you': {}}
+            # Parser is from the receiver's perspective
+            received_proposal = {int(k): v for k, v in lf['proposal'].iteritems()}
+            proposal['me'] = received_proposal[agent]
+            proposal['you'] = received_proposal[1-agent]
+        if e.action == 'select':
+            if e.agent != agent:
+                proposal = None
+            else:
+                sel = ex.outcome['item_split']
+                proposal = {'me': {}, 'you': {}}
+                for item, count in sel[agent].iteritems():
+                    proposal['me'][item] = count
+                for item, count in sel[1-agent].iteritems():
+                    proposal['you'][item] = count
+                    
+        utterance = lf_to_tokens(lf, proposal, items=["book", "hat", "ball"])
+
+        if utterance:
+            dialogue.add_utterance(e.agent, utterance, lf=e.metadata)
+
+    return dialogue
+'''
 
 
 def parse_dialogue(dia: str):
     # takes in like this: "THEM: i would like 4 hats and you can have the rest . <eos> YOU: deal <eos> THEM: <selection>"
     # or this: ""
-    
+
     # TODO
-    pass
+    if dia[0] == 'T':
+        agent = 0
+    elif dia[0] == 'Y':
+        agent = 1
+    else:
+        raise Exception(f'Agent cannot be identified from dialogue:\n\n{dia}\n\n')
+
+    ex = AttributeDict(get_ex(dia))
+
+    dialogue = Dialogue(agent, ex.scenario['kbs'][agent],
+                    ex.outcome, ex.uuid, model='lf2lf')
+    for e in ex.events:
+        e = AttributeDict(e)
+        lf = AttributeDict(e.metadata)
+        proposal = None
+        assert lf is not None
+        # TODO: hack
+        if lf.get('proposal') is not None:
+            proposal = {'me': {}, 'you': {}}
+            # Parser is from the receiver's perspective
+            received_proposal = {int(k): v for k, v in lf['proposal'].items()}
+            proposal['me'] = received_proposal[dialogue.agent]
+            proposal['you'] = received_proposal[1-dialogue.agent]
+        if e.action == 'select':
+            if e.agent != dialogue.agent:
+                proposal = None
+            else:
+                sel = ex.outcome['item_split']
+                proposal = {'me': {}, 'you': {}}
+                for item, count in sel[dialogue.agent].items():
+                    proposal['me'][item] = count
+                for item, count in sel[1-dialogue.agent].items():
+                    proposal['you'][item] = count
+                    
+        utterance = dialogue.lf_to_tokens(lf, proposal, items=["book", "hat", "ball"])
+            
+        if utterance:
+            dialogue.add_utterance(e.agent, utterance, lf=e.metadata)
+    
+    # print(dialogue)
+
+    # print(dialogue.token_turns, '\n')
+    # print(dialogue.lfs, '\n')
+    # print(dialogue.turns, '\n')
+    # print(dialogue.entities, '\n')
+    # print(dialogue.agents, '\n')
+
+
+    # OTHER TEST
+    # print(ex.events)
+    # print(dia.split('<eos>'))
+    # print([' '.join(u) for u in dialogue.token_turns])
+    # raise Exception('DONE')
+
+    return ' '.join([' '.join(utt) for utt in dialogue.token_turns])
 
 
 def parse_output(out: str):
@@ -34,25 +137,25 @@ def parse_output(out: str):
     # or this: "<no_agreement> <no_agreement> <no_agreement> <no_agreement> <no_agreement> <no_agreement>"
     
     # TODO
-    pass
+    return out
 
 
 def parse_line(l: str):
     sp = l.split(' </input> ')
     assert(len(sp) == 2)
-    inp = parse_inp(sp[0].lstrip('<input> '))
+    inp = ''.join([sp[0], ' </input>'])  # parse_inp(sp[0].lstrip('<input> '))
 
     sp = sp[1].split(' </dialogue> ')
     assert(len(sp) == 2)
-    dia = parse_dialogue(sp[0].lstrip('<dialogue> '))
+    dia = ' '.join(['<dialogue>', parse_dialogue(sp[0].lstrip('<dialogue> ')), '</dialogue>'])
 
     sp = sp[1].split(' </output> ')
     assert(len(sp) == 2)
-    out = parse_dialogue(sp[0].lstrip('<output> '))
+    out = ''.join([sp[0], ' </output> '])  # parse_output(sp[0].lstrip('<output> '))
 
-    part_inp = parse_inp(sp[1].lstrip('<partner_input> ').rstrip(' </partner_input>'))
-
-    # TODO: DO STUFF WITH inp, dia, out, part_inp
+    part_inp = sp[1] #  parse_inp(sp[1].lstrip('<partner_input> ').rstrip(' </partner_input>'))
+    
+    return ' '.join([inp, dia, out, part_inp])
 
 
 def parse_file(f, out):
