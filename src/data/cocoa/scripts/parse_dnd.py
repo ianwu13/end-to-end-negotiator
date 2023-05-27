@@ -23,53 +23,6 @@ def parse_inp(scn: str):
     return scn
 
 
-'''
-def parse_dialogue(dia: str):
-    # takes in like this: "THEM: i would like 4 hats and you can have the rest . <eos> YOU: deal <eos> THEM: <selection>"
-    # or this: ""
-
-    # TODO
-    if dia[0] == 'T':
-        agent = 0
-    elif dia[0] == 'Y':
-        agent = 1
-    else:
-        raise Exception(f'Agent cannot be identified from dialogue:\n\n{dia}\n\n')
-
-    ex = get_ex(dia)
-
-    for e in ex.events:
-
-        lf = e.metadata
-        proposal = None
-        assert lf is not None
-        # TODO: hack
-        if lf.get('proposal') is not None:
-            proposal = {'me': {}, 'you': {}}
-            # Parser is from the receiver's perspective
-            received_proposal = {int(k): v for k, v in lf['proposal'].iteritems()}
-            proposal['me'] = received_proposal[agent]
-            proposal['you'] = received_proposal[1-agent]
-        if e.action == 'select':
-            if e.agent != agent:
-                proposal = None
-            else:
-                sel = ex.outcome['item_split']
-                proposal = {'me': {}, 'you': {}}
-                for item, count in sel[agent].iteritems():
-                    proposal['me'][item] = count
-                for item, count in sel[1-agent].iteritems():
-                    proposal['you'][item] = count
-                    
-        utterance = lf_to_tokens(lf, proposal, items=["book", "hat", "ball"])
-
-        if utterance:
-            dialogue.add_utterance(e.agent, utterance, lf=e.metadata)
-
-    return dialogue
-'''
-
-
 def parse_dialogue(dia: str):
     # takes in like this: "THEM: i would like 4 hats and you can have the rest . <eos> YOU: deal <eos> THEM: <selection>"
     # or this: ""
