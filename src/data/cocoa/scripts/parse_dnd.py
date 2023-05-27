@@ -145,6 +145,7 @@ def parse_dialogue(dia: str):
     
     for i in [-1, -2]:
         assert(tok_turns[i][1] == '<select>')
+        tok_turns[i][1] = 'select'
         tok_turns[i][-1] = '<selection>'
 
     return ' '.join([' '.join(utt) for utt in tok_turns])
