@@ -142,8 +142,10 @@ def parse_dialogue(dia: str):
         else:
             turn[0] = 'THEM:'
             agent = 1
-    assert(tok_turns[-1][-1] == '<eos>')
-    tok_turns[-1] = tok_turns[-1][:-1]
+    
+    for i in [-1, -2]:
+        assert(tok_turns[i][1] == '<select>')
+        tok_turns[i][-1] = '<selection>'
 
     return ' '.join([' '.join(utt) for utt in tok_turns])
 
@@ -170,7 +172,7 @@ def parse_line(l: str):
 
     sp = sp[1].split(' </output> ')
     assert(len(sp) == 2)
-    out = ''.join([sp[0], ' </output> '])  # parse_output(sp[0].lstrip('<output> '))
+    out = ''.join([sp[0], ' </output>'])  # parse_output(sp[0].lstrip('<output> '))
 
     part_inp = sp[1] #  parse_inp(sp[1].lstrip('<partner_input> ').rstrip(' </partner_input>'))
     
