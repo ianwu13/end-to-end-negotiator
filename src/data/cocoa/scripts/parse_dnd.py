@@ -52,8 +52,8 @@ def parse_dialogue(dia: str):
             proposal = {'me': {}, 'you': {}}
             # Parser is from the receiver's perspective
             received_proposal = {int(k): v for k, v in lf['proposal'].items()}
-            proposal['me'] = received_proposal[dialogue.agent]
-            proposal['you'] = received_proposal[1-dialogue.agent]
+            proposal['me'] = received_proposal[1]  # received_proposal[dialogue.agent]
+            proposal['you'] = received_proposal[0]  # received_proposal[1-dialogue.agent]
         if e.action == 'select':
             if e.agent != dialogue.agent:
                 proposal = None
@@ -95,13 +95,20 @@ def parse_dialogue(dia: str):
         else:
             turn[0] = 'THEM:'
             agent = 1
-    
+
+    '''
     for i in [-1, -2]:
         assert(tok_turns[i][1] == '<select>')
         tok_turns[i][1] = 'select'
         tok_turns[i][-1] = '<selection>'
 
     return ' '.join([' '.join(utt) for utt in tok_turns])
+    '''
+    
+    assert(tok_turns[-2][1] == '<select>')
+    tok_turns[-2] = [tok_turns[-2][0], '<selection>']
+
+    return ' '.join([' '.join(utt) for utt in tok_turns[:-1]])
 
 
 def parse_output(out: str):
@@ -127,6 +134,8 @@ def parse_line(l: str):
     sp = sp[1].split(' </output> ')
     assert(len(sp) == 2)
     out = ''.join([sp[0], ' </output>'])  # parse_output(sp[0].lstrip('<output> '))
+    if '<no_agreement>' in out:
+        return None
 
     part_inp = sp[1] #  parse_inp(sp[1].lstrip('<partner_input> ').rstrip(' </partner_input>'))
     

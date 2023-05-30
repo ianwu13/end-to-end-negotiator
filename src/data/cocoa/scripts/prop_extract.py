@@ -156,7 +156,7 @@ class Dialogue(object):
         tokens = [intent]
         if proposal is not None:
             for item in items:
-                tokens.append('{item}={count}'.format(item=item, count= proposal['me'][item]))
+                tokens.append('{item} = {count}'.format(item=item, count= proposal['me'][item]))
                 #tokens.append('{count}'.format(count= proposal['me'][item]))
                 #tokens.append(str(proposal[item]))
         return tokens
