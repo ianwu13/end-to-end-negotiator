@@ -33,6 +33,8 @@ def main():
     parser = argparse.ArgumentParser(description='training script')
     parser.add_argument('--data', type=str, default=config.data_dir,
         help='location of the data corpus')
+    parser.add_argument('--use_dummy_data', type=bool, default=False,
+        help='set True to use dummy data (train_dummy.txt, val_dummy.txt, test_dummy.txt)')
     parser.add_argument('--nembed_word', type=int, default=config.nembed_word,
         help='size of word embeddings')
     parser.add_argument('--nembed_ctx', type=int, default=config.nembed_ctx,
@@ -96,7 +98,11 @@ def main():
     utils.set_seed(args.seed)
 
     logging.info("Building word corpus, requiring minimum word frequency of %d for dictionary" % (args.unk_threshold))
-    corpus = data.WordCorpus(args.data, freq_cutoff=args.unk_threshold, verbose=True)
+    if args.use_dummy_data:
+        corpus = data.WordCorpus(args.data, freq_cutoff=args.unk_threshold, train='train_dummy.txt',
+        valid='val_dummy.txt', test='test_dummy.txt', verbose=True)
+    else:
+        corpus = data.WordCorpus(args.data, freq_cutoff=args.unk_threshold, verbose=True)
 
     logging.info("Building RNN-based dialogue model from word corpus")
     model = DialogModel(corpus.word_dict, corpus.item_dict, corpus.context_dict,
