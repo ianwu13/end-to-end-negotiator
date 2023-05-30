@@ -33,8 +33,8 @@ def main():
     parser = argparse.ArgumentParser(description='training script')
     parser.add_argument('--data', type=str, default=config.data_dir,
         help='location of the data corpus')
-    parser.add_argument('--use_dummy_data', type=bool, default=False,
-        help='set True to use dummy data (train_dummy.txt, val_dummy.txt, test_dummy.txt)')
+    parser.add_argument('--use_dummy_data', action='store_true', default=False,
+        help='set to use dummy data (train_dummy.txt, val_dummy.txt, test_dummy.txt)')
     parser.add_argument('--nembed_word', type=int, default=config.nembed_word,
         help='size of word embeddings')
     parser.add_argument('--nembed_ctx', type=int, default=config.nembed_ctx,
