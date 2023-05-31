@@ -108,6 +108,12 @@ class Dictionary(object):
         for token, freq in token_freqs:
             if freq > freq_cutoff:
                 dictionary.add_word(token)
+
+        if tag == 'output':
+            # add missing tokens for <output>
+            dictionary.add_word('<no_agreement>')
+            dictionary.add_word('<disconnect>')
+
         return dictionary
 
     def from_file(file_name, freq_cutoff):
