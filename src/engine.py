@@ -30,7 +30,8 @@ class Criterion(object):
     def __init__(self, dictionary, device_id=None, bad_toks=[], reduction='mean'):
         w = torch.Tensor(len(dictionary)).fill_(1)
         for tok in bad_toks:
-            w[dictionary.get_idx(tok)] = 0.0
+            if dictionary.get_idx(tok) is not None:
+                w[dictionary.get_idx(tok)] = 0.0
         if device_id is not None:
             w = w.cuda(device_id)
         # https://pytorch.org/docs/stable/nn.html 
@@ -108,7 +109,11 @@ class Engine(object):
 
             # compute LM loss and selection loss
             loss = self.crit(out.view(-1, N), tgt)
+            # loss --> tensor(nan, grad_fn=<NllLossBackward0>)
+            
+            # TODO: ERROR HERE - self.sel_crit(sel_out, sel_tgt) is NONE
             loss += self.sel_crit(sel_out, sel_tgt) * self.model.args.sel_weight
+
             self.opt.zero_grad()
             # backward step with gradient clipping
             loss.backward()
@@ -193,7 +198,9 @@ class Engine(object):
         validdata = corpus.valid_dataset(self.args.bsz, device_id=self.device_id)
         for epoch in range(1, self.args.max_epoch + 1):
             traindata = corpus.train_dataset(self.args.bsz, device_id=self.device_id)
-            _, _, valid_select_loss = self.iter(N, epoch, lr, traindata, validdata)
+            
+            with autograd.detect_anomaly(True):
+                _, _, valid_select_loss = self.iter(N, epoch, lr, traindata, validdata)
 
             if valid_select_loss < best_valid_select_loss:
                 best_valid_select_loss = valid_select_loss
