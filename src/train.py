@@ -98,6 +98,7 @@ def main():
     utils.set_seed(args.seed)
 
     logging.info("Building word corpus, requiring minimum word frequency of %d for dictionary" % (args.unk_threshold))
+    # Use dummy data if flag is provided
     if args.use_dummy_data:
         corpus = data.WordCorpus(args.data, freq_cutoff=args.unk_threshold, train='train_dummy.txt',
         valid='val_dummy.txt', test='test_dummy.txt', verbose=True)
