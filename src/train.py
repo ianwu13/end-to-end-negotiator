@@ -105,6 +105,10 @@ def main():
     else:
         corpus = data.WordCorpus(args.data, freq_cutoff=args.unk_threshold, verbose=True)
 
+    # add missing tokens for <output>
+    corpus.item_dict.add_word('<no_agreement>')
+    corpus.item_dict.add_word('<disconnect>')
+
     logging.info("Building RNN-based dialogue model from word corpus")
     model = DialogModel(corpus.word_dict, corpus.item_dict, corpus.context_dict,
         corpus.output_length, args, device_id)
