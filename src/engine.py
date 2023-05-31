@@ -210,7 +210,8 @@ class Engine(object):
                 best_valid_select_loss, np.exp(best_valid_select_loss)))
 
         self.model = best_model
-        for epoch in range(self.args.max_epoch + 1, 100):
+        # max(100, self.args.max_epoch + 2) - if run for more than 100 epochs still need this to run at least once
+        for epoch in range(self.args.max_epoch + 1, max(100, self.args.max_epoch + 2)):
             if epoch - last_decay_epoch >= self.args.decay_every:
                 last_decay_epoch = epoch
                 lr /= self.args.decay_rate
