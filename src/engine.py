@@ -199,8 +199,7 @@ class Engine(object):
         for epoch in range(1, self.args.max_epoch + 1):
             traindata = corpus.train_dataset(self.args.bsz, device_id=self.device_id)
             
-            with autograd.detect_anomaly(True):
-                _, _, valid_select_loss = self.iter(N, epoch, lr, traindata, validdata)
+            _, _, valid_select_loss = self.iter(N, epoch, lr, traindata, validdata)
 
             if valid_select_loss < best_valid_select_loss:
                 best_valid_select_loss = valid_select_loss
