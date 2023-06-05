@@ -7,12 +7,12 @@ CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python train.py  --data data/negot
 
 ## Selfplay
 ```
-CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python chat.py --model_file ../../logs/sv_model.pt --context_file data/negotiate/selfplay.txt --temperature 0.5 --ref_text data/negotiate/train.txt
+CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python selfplay.py --alice_model_file ../../logs/sv_model.pt --bob_model_file ../../logs/sv_model.pt --context_file data/negotiate/selfplay.txt --temperature 0.5 --log_file ../../logs/selfplay.log --ref_text data/negotiate/train.txt
 ```
 
 ## Human-Agent Chat
 ```
-CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python selfplay.py --alice_model_file ../../logs/sv_model.pt --bob_model_file ../../logs/sv_model.pt --context_file data/negotiate/selfplay.txt --temperature 0.5 --log_file ../../logs/selfplay.log --ref_text data/negotiate/train.txt
+CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python chat.py --model_file ../../logs/sv_model.pt --context_file data/negotiate/selfplay.txt --temperature 0.5 --ref_text data/negotiate/train.txt
 ```
 
 ## Reinforcement Learning
@@ -31,12 +31,12 @@ CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python train.py  --data data/dia_a
 
 ## Selfplay
 ```
-CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python chat.py --model_file ../../logs/sv_model_da.pt --context_file data/dia_act/selfplay.txt --temperature 0.5 --ref_text data/dia_act/train.txt
+CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python selfplay.py --alice_model_file ../../logs/sv_model_da.pt --bob_model_file ../../logs/sv_model_da.pt --context_file data/dia_act/selfplay.txt --temperature 0.5 --log_file ../../logs/selfplay_da.log --ref_text data/dia_act/train.txt
 ```
 
 ## Human-Agent Chat
 ```
-CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python selfplay.py --alice_model_file ../../logs/sv_model_da.pt --bob_model_file ../../logs/sv_model_da.pt --context_file data/dia_act/selfplay.txt --temperature 0.5 --log_file ../../logs/selfplay_da.log --ref_text data/dia_act/train.txt
+CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python chat.py --model_file ../../logs/sv_model_da.pt --context_file data/dia_act/selfplay.txt --temperature 0.5 --ref_text data/dia_act/train.txt
 ```
 
 ## Reinforcement Learning
