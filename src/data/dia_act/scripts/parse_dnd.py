@@ -52,8 +52,8 @@ def parse_dialogue(dia: str):
             proposal = {'me': {}, 'you': {}}
             # Parser is from the receiver's perspective
             received_proposal = {int(k): v for k, v in lf['proposal'].items()}
-            proposal['me'] = received_proposal[1]  # received_proposal[dialogue.agent]
-            proposal['you'] = received_proposal[0]  # received_proposal[1-dialogue.agent]
+            proposal['me'] = received_proposal[e['agent']]  # received_proposal[dialogue.agent]
+            proposal['you'] = received_proposal[1-e['agent']]  # received_proposal[1-dialogue.agent]
         if e.action == 'select':
             if e.agent != dialogue.agent:
                 proposal = None

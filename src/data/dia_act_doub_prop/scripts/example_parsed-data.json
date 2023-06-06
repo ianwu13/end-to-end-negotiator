@@ -1,0 +1,585 @@
+[
+    {
+        "uuid": "E_IstVkxEuXI9NK70y",
+        "scenario": {
+            "attributes": [
+                {
+                    "entity": true,
+                    "unique": false,
+                    "value_type": "item",
+                    "name": "Name",
+                    "multivalued": false
+                },
+                {
+                    "entity": true,
+                    "unique": false,
+                    "value_type": "integer",
+                    "name": "Name",
+                    "multivalued": false
+                },
+                {
+                    "entity": true,
+                    "unique": false,
+                    "value_type": "integer",
+                    "name": "Name",
+                    "multivalued": false
+                }
+            ],
+            "uuid": "FB_BULbjiPN7qHWQ7d9",
+            "kbs": [
+                [
+                    {
+                        "Count": 1,
+                        "Name": "book",
+                        "Value": 4
+                    },
+                    {
+                        "Count": 4,
+                        "Name": "hat",
+                        "Value": 1
+                    },
+                    {
+                        "Count": 1,
+                        "Name": "ball",
+                        "Value": 2
+                    }
+                ],
+                [
+                    {
+                        "Count": 1,
+                        "Name": "book",
+                        "Value": 0
+                    },
+                    {
+                        "Count": 4,
+                        "Name": "hat",
+                        "Value": 2
+                    },
+                    {
+                        "Count": 1,
+                        "Name": "ball",
+                        "Value": 2
+                    }
+                ]
+            ]
+        },
+        "agents_info": {},
+        "scenario_uuid": "FB_BULbjiPN7qHWQ7d9",
+        "agents": {
+            "0": "human",
+            "1": "human"
+        },
+        "outcome": {
+            "valid_deal": true,
+            "item_split": [
+                {
+                    "book": 1,
+                    "hat": 0,
+                    "ball": 1
+                },
+                {
+                    "book": 0,
+                    "hat": 4,
+                    "ball": 0
+                }
+            ],
+            "reward": {
+                "1": 8,
+                "0": 6
+            },
+            "agreed": true
+        },
+        "events": [
+            {
+                "start_time": 1526674259.63472,
+                "agent": 1,
+                "time": 0,
+                "action": "message",
+                "data": "i would like 4 hats and you can have the rest .",
+                "metadata": {
+                    "intent": "propose",
+                    "proposal": {
+                        "0": {
+                            "book": 1,
+                            "hat": 0,
+                            "ball": 1
+                        },
+                        "1": {
+                            "book": 0,
+                            "hat": 4,
+                            "ball": 0
+                        }
+                    },
+                    "proposal_type": "me,none,all,none|you,none,none,none"
+                }
+            },
+            {
+                "start_time": 1526674259.634723,
+                "agent": 0,
+                "time": 1,
+                "action": "message",
+                "data": "deal",
+                "metadata": {
+                    "intent": "agree",
+                    "proposal": null,
+                    "proposal_type": null
+                }
+            },
+            {
+                "start_time": 1526674259.634728,
+                "agent": 1,
+                "time": 2,
+                "action": "select",
+                "data": {
+                    "book": 0,
+                    "hat": 4,
+                    "ball": 0
+                },
+                "metadata": {
+                    "intent": "select"
+                }
+            },
+            {
+                "start_time": 1526674259.634732,
+                "agent": 0,
+                "time": 3,
+                "action": "select",
+                "data": {
+                    "book": 1,
+                    "hat": 0,
+                    "ball": 1
+                },
+                "metadata": {
+                    "intent": "select"
+                }
+            }
+        ]
+    },
+    {
+        "uuid": "E_FN2PfnfBozcZlefQ",
+        "scenario": {
+            "attributes": [
+                {
+                    "entity": true,
+                    "unique": false,
+                    "value_type": "item",
+                    "name": "Name",
+                    "multivalued": false
+                },
+                {
+                    "entity": true,
+                    "unique": false,
+                    "value_type": "integer",
+                    "name": "Name",
+                    "multivalued": false
+                },
+                {
+                    "entity": true,
+                    "unique": false,
+                    "value_type": "integer",
+                    "name": "Name",
+                    "multivalued": false
+                }
+            ],
+            "uuid": "FB_kprcFt9RAfG8uUA8",
+            "kbs": [
+                [
+                    {
+                        "Count": 1,
+                        "Name": "book",
+                        "Value": 2
+                    },
+                    {
+                        "Count": 3,
+                        "Name": "hat",
+                        "Value": 2
+                    },
+                    {
+                        "Count": 1,
+                        "Name": "ball",
+                        "Value": 2
+                    }
+                ],
+                [
+                    {
+                        "Count": 1,
+                        "Name": "book",
+                        "Value": 10
+                    },
+                    {
+                        "Count": 3,
+                        "Name": "hat",
+                        "Value": 0
+                    },
+                    {
+                        "Count": 1,
+                        "Name": "ball",
+                        "Value": 0
+                    }
+                ]
+            ]
+        },
+        "agents_info": {},
+        "scenario_uuid": "FB_kprcFt9RAfG8uUA8",
+        "agents": {
+            "0": "human",
+            "1": "human"
+        },
+        "outcome": {
+            "valid_deal": true,
+            "item_split": [
+                {
+                    "book": 0,
+                    "hat": 3,
+                    "ball": 1
+                },
+                {
+                    "book": 1,
+                    "hat": 0,
+                    "ball": 0
+                }
+            ],
+            "reward": {
+                "1": 10,
+                "0": 8
+            },
+            "agreed": true
+        },
+        "events": [
+            {
+                "start_time": 1526674259.6348159313,
+                "agent": 1,
+                "time": 0,
+                "action": "message",
+                "data": "hi i would like the book and ball and you can have the hats",
+                "metadata": {
+                    "intent": "propose",
+                    "proposal": {
+                        "0": {
+                            "book": 0,
+                            "hat": 3,
+                            "ball": 0
+                        },
+                        "1": {
+                            "book": 1,
+                            "hat": 0,
+                            "ball": 1
+                        }
+                    },
+                    "proposal_type": "me,all,none,all|you,none,all,none"
+                }
+            },
+            {
+                "start_time": 1526674259.6348180771,
+                "agent": 0,
+                "time": 1,
+                "action": "message",
+                "data": "i can give you either the book or the ball",
+                "metadata": {
+                    "intent": "propose",
+                    "proposal": {
+                        "0": {
+                            "book": 0,
+                            "hat": 3,
+                            "ball": 0
+                        },
+                        "1": {
+                            "book": 1,
+                            "hat": 0,
+                            "ball": 1
+                        }
+                    },
+                    "proposal_type": "me,none,none,none|you,all,none,all"
+                }
+            },
+            {
+                "start_time": 1526674259.6348199844,
+                "agent": 1,
+                "time": 2,
+                "action": "message",
+                "data": "ill take the book",
+                "metadata": {
+                    "intent": "propose",
+                    "proposal": {
+                        "0": {
+                            "book": 0,
+                            "hat": 3,
+                            "ball": 1
+                        },
+                        "1": {
+                            "book": 1,
+                            "hat": 0,
+                            "ball": 0
+                        }
+                    },
+                    "proposal_type": "me,all,none,none|you,none,none,none"
+                }
+            },
+            {
+                "start_time": 1526674259.6348209381,
+                "agent": 0,
+                "time": 3,
+                "action": "message",
+                "data": "ok i will take the hats and ball",
+                "metadata": {
+                    "intent": "propose",
+                    "proposal": {
+                        "0": {
+                            "ball": 1,
+                            "hat": 3,
+                            "book": 0
+                        },
+                        "1": {
+                            "book": 1,
+                            "hat": 0,
+                            "ball": 0
+                        }
+                    },
+                    "proposal_type": "me,none,all,all|you,none,none,none"
+                }
+            },
+            {
+                "start_time": 1526674259.6348230839,
+                "agent": 1,
+                "time": 4,
+                "action": "message",
+                "data": "deal",
+                "metadata": {
+                    "intent": "agree",
+                    "proposal": null,
+                    "proposal_type": null
+                }
+            },
+            {
+                "start_time": 1526674259.6348240376,
+                "agent": 0,
+                "time": 5,
+                "action": "select",
+                "data": {
+                    "book": 0,
+                    "hat": 3,
+                    "ball": 1
+                },
+                "metadata": {
+                    "intent": "select"
+                }
+            },
+            {
+                "start_time": 1526674259.6348249912,
+                "agent": 1,
+                "time": 6,
+                "action": "select",
+                "data": {
+                    "book": 1,
+                    "hat": 0,
+                    "ball": 0
+                },
+                "metadata": {
+                    "intent": "select"
+                }
+            }
+        ]
+    },
+    {
+        "uuid": "E_UuBXm8TwoWe0qVtM",
+        "scenario": {
+            "attributes": [
+                {
+                    "entity": true,
+                    "unique": false,
+                    "value_type": "item",
+                    "name": "Name",
+                    "multivalued": false
+                },
+                {
+                    "entity": true,
+                    "unique": false,
+                    "value_type": "integer",
+                    "name": "Name",
+                    "multivalued": false
+                },
+                {
+                    "entity": true,
+                    "unique": false,
+                    "value_type": "integer",
+                    "name": "Name",
+                    "multivalued": false
+                }
+            ],
+            "uuid": "FB_Imc0ykelFHBS9PDW",
+            "kbs": [
+                [
+                    {
+                        "Count": 1,
+                        "Name": "book",
+                        "Value": 1
+                    },
+                    {
+                        "Count": 3,
+                        "Name": "hat",
+                        "Value": 1
+                    },
+                    {
+                        "Count": 2,
+                        "Name": "ball",
+                        "Value": 3
+                    }
+                ],
+                [
+                    {
+                        "Count": 1,
+                        "Name": "book",
+                        "Value": 10
+                    },
+                    {
+                        "Count": 3,
+                        "Name": "hat",
+                        "Value": 0
+                    },
+                    {
+                        "Count": 2,
+                        "Name": "ball",
+                        "Value": 0
+                    }
+                ]
+            ]
+        },
+        "agents_info": {},
+        "scenario_uuid": "FB_Imc0ykelFHBS9PDW",
+        "agents": {
+            "0": "human",
+            "1": "human"
+        },
+        "outcome": {
+            "valid_deal": true,
+            "item_split": [
+                {
+                    "book": 0,
+                    "hat": 1,
+                    "ball": 2
+                },
+                {
+                    "book": 1,
+                    "hat": 2,
+                    "ball": 0
+                }
+            ],
+            "reward": {
+                "1": 10,
+                "0": 7
+            },
+            "agreed": true
+        },
+        "events": [
+            {
+                "start_time": 1526674259.6349020004,
+                "agent": 1,
+                "time": 0,
+                "action": "message",
+                "data": "lemme get that book and ball !",
+                "metadata": {
+                    "intent": "propose",
+                    "proposal": {
+                        "0": {
+                            "book": 0,
+                            "hat": 3,
+                            "ball": 0
+                        },
+                        "1": {
+                            "book": 1,
+                            "hat": 0,
+                            "ball": 2
+                        }
+                    },
+                    "proposal_type": "me,all,none,all|you,none,none,none"
+                }
+            },
+            {
+                "start_time": 1526674259.6349039078,
+                "agent": 0,
+                "time": 1,
+                "action": "message",
+                "data": "i need 2 balls and a hat",
+                "metadata": {
+                    "intent": "propose",
+                    "proposal": {
+                        "0": {
+                            "ball": 2,
+                            "hat": 1,
+                            "book": 0
+                        },
+                        "1": {
+                            "book": 1,
+                            "hat": 2,
+                            "ball": 0
+                        }
+                    },
+                    "proposal_type": "me,none,number,all|you,none,none,none"
+                }
+            },
+            {
+                "start_time": 1526674259.6349050999,
+                "agent": 1,
+                "time": 2,
+                "action": "message",
+                "data": "i'll take the book and two hats then ?",
+                "metadata": {
+                    "intent": "propose",
+                    "proposal": {
+                        "0": {
+                            "book": 0,
+                            "hat": 1,
+                            "ball": 2
+                        },
+                        "1": {
+                            "book": 1,
+                            "hat": 2,
+                            "ball": 0
+                        }
+                    },
+                    "proposal_type": "me,all,number,none|you,none,none,none"
+                }
+            },
+            {
+                "start_time": 1526674259.6349070072,
+                "agent": 0,
+                "time": 3,
+                "action": "message",
+                "data": "ok",
+                "metadata": {
+                    "intent": "agree",
+                    "proposal": null,
+                    "proposal_type": null
+                }
+            },
+            {
+                "start_time": 1526674259.6349079609,
+                "agent": 1,
+                "time": 4,
+                "action": "select",
+                "data": {
+                    "book": 1,
+                    "hat": 2,
+                    "ball": 0
+                },
+                "metadata": {
+                    "intent": "select"
+                }
+            },
+            {
+                "start_time": 1526674259.6349089146,
+                "agent": 0,
+                "time": 5,
+                "action": "select",
+                "data": {
+                    "book": 0,
+                    "hat": 1,
+                    "ball": 2
+                },
+                "metadata": {
+                    "intent": "select"
+                }
+            }
+        ]
+    }
+]
