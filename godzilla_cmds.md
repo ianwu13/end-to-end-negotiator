@@ -1,8 +1,51 @@
+# RL training commands
+
+## dnd
+```
+CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python train.py  --data data/final_dnd --cuda --bsz 16  --clip 0.5  --decay_every 1  --decay_rate 5.0  --dropout 0.5  --init_range 0.1  --lr 1  --max_epoch 30  --min_lr 0.01  --momentum 0.1  --nembed_ctx 64  --nembed_word 256  --nesterov  --nhid_attn 256  --nhid_ctx 64  --nhid_lang 128  --nhid_sel 256  --nhid_strat 128  --sel_weight 0.5  --model_file ../logs/dnd_supervised_30ep.pt
+
+echo SELFISH
+
+CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python reinforce.py --cuda --data data/final_dnd --bsz 16 --clip 1 --context_file data/final_dnd/selfplay.txt --eps 0.0 --gamma 0.95 --lr 0.5 --momentum 0.1 --nepoch 4 --nesterov --ref_text data/final_dnd/train.txt --rl_clip 1 --rl_lr 0.2 --score_threshold 6 --sv_train_freq 4 --temperature 0.5 --alice_model ../logs/dnd_supervised_30ep.pt --bob_model ../logs/dnd_supervised_30ep.pt --rw_type own_points --output_model_file ../logs/dnd_rl_selfish_4ep.pt
+
+echo FAIR
+
+CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python reinforce.py --cuda --data data/final_dnd --bsz 16 --clip 1 --context_file data/final_dnd/selfplay.txt --eps 0.0 --gamma 0.95 --lr 0.5 --momentum 0.1 --nepoch 4 --nesterov --ref_text data/final_dnd/train.txt --rl_clip 1 --rl_lr 0.2 --score_threshold 6 --sv_train_freq 4 --temperature 0.5 --alice_model ../logs/dnd_supervised_30ep.pt --bob_model ../logs/dnd_supervised_30ep.pt --rw_type combine50_50 --output_model_file ../logs/dnd_rl_fair_4ep.pt
+```
+
+## casino dnd format
+```
+CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python train.py  --data data/final_casino_dndformat --cuda --bsz 16  --clip 0.5  --decay_every 1  --decay_rate 5.0  --dropout 0.5  --init_range 0.1  --lr 1  --max_epoch 30  --min_lr 0.01  --momentum 0.1  --nembed_ctx 64  --nembed_word 256  --nesterov  --nhid_attn 256  --nhid_ctx 64  --nhid_lang 128  --nhid_sel 256  --nhid_strat 128  --sel_weight 0.5  --model_file ../logs/casino_dndformat_supervised_30ep.pt
+
+echo SELFISH
+
+CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python reinforce.py --cuda --data data/final_casino_dndformat --bsz 16 --clip 1 --context_file data/final_casino_dndformat/selfplay.txt --eps 0.0 --gamma 0.95 --lr 0.5 --momentum 0.1 --nepoch 4 --nesterov --ref_text data/final_casino_dndformat/train.txt --rl_clip 1 --rl_lr 0.2 --score_threshold 6 --sv_train_freq 4 --temperature 0.5 --alice_model ../logs/casino_dndformat_supervised_30ep.pt --bob_model ../logs/casino_dndformat_supervised_30ep.pt --rw_type own_points --output_model_file ../logs/casino_dndform_rl_selfish_4ep.pt
+
+echo FAIR
+
+CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python reinforce.py --cuda --data data/final_casino_dndformat --bsz 16 --clip 1 --context_file data/final_casino_dndformat/selfplay.txt --eps 0.0 --gamma 0.95 --lr 0.5 --momentum 0.1 --nepoch 4 --nesterov --ref_text data/final_casino_dndformat/train.txt --rl_clip 1 --rl_lr 0.2 --score_threshold 6 --sv_train_freq 4 --temperature 0.5 --alice_model ../logs/casino_dndformat_supervised_30ep.pt --bob_model ../logs/casino_dndformat_supervised_30ep.pt --rw_type combine50_50 --output_model_file ../logs/casino_dndform_rl_fair_4ep.pt
+```
+
+## casino custom format
+```
+CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python train.py  --data data/final_casino_custformat --cuda --bsz 16  --clip 0.5  --decay_every 1  --decay_rate 5.0  --dropout 0.5  --init_range 0.1  --lr 1  --max_epoch 30  --min_lr 0.01  --momentum 0.1  --nembed_ctx 64  --nembed_word 256  --nesterov  --nhid_attn 256  --nhid_ctx 64  --nhid_lang 128  --nhid_sel 256  --nhid_strat 128  --sel_weight 0.5  --model_file ../logs/casino_custformat_supervised_30ep.pt
+
+echo SELFISH
+
+CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python reinforce.py --cuda --data data/final_casino_custformat --bsz 16 --clip 1 --context_file data/final_casino_custformat/selfplay.txt --eps 0.0 --gamma 0.95 --lr 0.5 --momentum 0.1 --nepoch 4 --nesterov --ref_text data/final_casino_custformat/train.txt --rl_clip 1 --rl_lr 0.2 --score_threshold 6 --sv_train_freq 4 --temperature 0.5 --alice_model ../logs/casino_custformat_supervised_30ep.pt --bob_model ../logs/casino_custformat_supervised_30ep.pt --rw_type own_points --output_model_file ../logs/casino_custform_rl_selfish_4ep.pt
+
+echo FAIR
+
+CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python reinforce.py --cuda --data data/final_casino_custformat --bsz 16 --clip 1 --context_file data/final_casino_custformat/selfplay.txt --eps 0.0 --gamma 0.95 --lr 0.5 --momentum 0.1 --nepoch 4 --nesterov --ref_text data/final_casino_custformat/train.txt --rl_clip 1 --rl_lr 0.2 --score_threshold 6 --sv_train_freq 4 --temperature 0.5 --alice_model ../logs/casino_custformat_supervised_30ep.pt --bob_model ../logs/casino_custformat_supervised_30ep.pt --rw_type combine50_50 --output_model_file ../logs/casino_custform_rl_fair_4ep.pt
+```
+
+
+
 # UTTERANCE LEVEL COMMANDS
 
 ## Supervised Learning
 ```
-CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python train.py  --data data/negotiate --cuda --bsz 16  --clip 0.5  --decay_every 1  --decay_rate 5.0  --dropout 0.5  --init_range 0.1  --lr 1  --max_epoch 30  --min_lr 0.01  --momentum 0.1  --nembed_ctx 64  --nembed_word 256  --nesterov  --nhid_attn 256  --nhid_ctx 64  --nhid_lang 128  --nhid_sel 256  --nhid_strat 128  --sel_weight 0.5  --model_file ../../logs/sv_model.pt
+CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python train.py  --data data/negotiate --cuda --bsz 16  --clip 0.5  --decay_every 1  --decay_rate 5.0  --dropout 0.5  --init_range 0.1  --lr 1  --max_epoch 30  --min_lr 0.01  --momentum 0.1  --nembed_ctx 64  --nembed_word 256  --nesterov  --nhid_attn 256  --nhid_ctx 64  --nhid_lang 128  --nhid_sel 256  --nhid_strat 128  --sel_weight 0.5  --model_file ../logs/sv_model_30ep_dndNegotiate.pt
 ```
 
 ## Selfplay
@@ -12,12 +55,12 @@ CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python selfplay.py --alice_model_f
 
 ## Human-Agent Chat
 ```
-CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python chat.py --model_file ../../logs/sv_model.pt --context_file data/negotiate/selfplay.txt --temperature 0.5 --ref_text data/negotiate/train.txt
+CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python chat.py --model_file ../../logs/sv_model.pt --context_file data/negotiate/selfplay.txt --temperature 0.5 --ref_text data/negotiate/train.txt --log_file ../../logs/chat_test.log
 ```
 
 ## Reinforcement Learning
 ```
-CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python reinforce.py --cuda --data data/negotiate --bsz 16 --clip 1 --context_file data/negotiate/selfplay.txt --eps 0.0 --gamma 0.95 --lr 0.5 --momentum 0.1 --nepoch 4 --nesterov --ref_text data/negotiate/train.txt --rl_clip 1 --rl_lr 0.2 --score_threshold 6 --sv_train_freq 4 --temperature 0.5 --alice_model ../../logs/sv_model.pt --bob_model ../../logs/sv_model.pt --rw_type utility --output_model_file ../../logs/rl_model.pt
+CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python reinforce.py --cuda --data data/negotiate --bsz 16 --clip 1 --context_file data/negotiate/selfplay.txt --eps 0.0 --gamma 0.95 --lr 0.5 --momentum 0.1 --nepoch 1 --nesterov --ref_text data/negotiate/train.txt --rl_clip 1 --rl_lr 0.2 --score_threshold 6 --sv_train_freq 4 --temperature 0.5 --alice_model ../../logs/sv_model.pt --bob_model ../../logs/sv_model.pt --rw_type utility --output_model_file ../../logs/rl_model.pt
 ```
 
 
@@ -26,36 +69,53 @@ CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python reinforce.py --cuda --data 
 
 ## Supervised Learning
 ```
-CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python train.py  --data data/dia_act --cuda --bsz 16  --clip 0.5  --decay_every 1  --decay_rate 5.0  --dropout 0.5  --init_range 0.1  --lr 1  --max_epoch 30  --min_lr 0.01  --momentum 0.1  --nembed_ctx 64  --nembed_word 256  --nesterov  --nhid_attn 256  --nhid_ctx 64  --nhid_lang 128  --nhid_sel 256  --nhid_strat 128  --sel_weight 0.5  --model_file ../../logs/sv_model_da.pt
+CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python train.py  --data data/dia_act_doub_prop --cuda --bsz 16  --clip 0.5  --decay_every 1  --decay_rate 5.0  --dropout 0.5  --init_range 0.1  --lr 1  --max_epoch 30  --min_lr 0.01  --momentum 0.1  --nembed_ctx 64  --nembed_word 256  --nesterov  --nhid_attn 256  --nhid_ctx 64  --nhid_lang 128  --nhid_sel 256  --nhid_strat 128  --sel_weight 0.5  --model_file ../../logs/sv_model_dia_act_doub_prop.pt
 ```
 
 ## Selfplay
 ```
-CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python selfplay.py --alice_model_file ../../logs/sv_model_da.pt --bob_model_file ../../logs/sv_model_da.pt --context_file data/dia_act/selfplay.txt --temperature 0.5 --log_file ../../logs/selfplay_da.log --ref_text data/dia_act/train.txt
+CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python selfplay.py --alice_model_file ../../logs/sv_model_dia_act_doub_prop.pt --bob_model_file ../../logs/sv_model_dia_act_doub_prop.pt --context_file data/dia_act_doub_prop/selfplay.txt --temperature 0.5 --log_file ../../logs/selfplay_dia_act_doub_prop.log --ref_text data/dia_act_doub_prop/train.txt
 ```
 
 ## Human-Agent Chat
 ```
-CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python chat.py --model_file ../../logs/sv_model_da.pt --context_file data/dia_act/selfplay.txt --temperature 0.5 --ref_text data/dia_act/train.txt
+CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python chat.py --model_file ../../logs/sv_model_dia_act_doub_prop.pt --context_file data/dia_act_doub_prop/selfplay.txt --temperature 0.5 --ref_text data/dia_act_doub_prop/train.txt
 ```
 
 ## Reinforcement Learning
 ```
-CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python reinforce.py --cuda --data data/dia_act --bsz 16 --clip 1 --context_file data/dia_act/selfplay.txt --eps 0.0 --gamma 0.95 --lr 0.5 --momentum 0.1 --nepoch 4 --nesterov --ref_text data/dia_act/train.txt --rl_clip 1 --rl_lr 0.2 --score_threshold 6 --sv_train_freq 4 --temperature 0.5 --alice_model ../../logs/sv_model_da.pt --bob_model ../../logs/sv_model_da.pt --rw_type utility --output_model_file ../../logs/rl_model.pt
+CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python reinforce.py --cuda --data data/dia_act_doub_prop --bsz 16 --clip 1 --context_file data/dia_act_doub_prop/selfplay.txt --eps 0.0 --gamma 0.95 --lr 0.5 --momentum 0.1 --nepoch 4 --nesterov --ref_text data/dia_act_doub_prop/train.txt --rl_clip 1 --rl_lr 0.2 --score_threshold 6 --sv_train_freq 4 --temperature 0.5 --alice_model ../../logs/sv_model_dia_act_doub_prop.pt --bob_model ../../logs/sv_model_dia_act_doub_prop.pt --rw_type utility --output_model_file ../../logs/rl_model_dia_act_doub_prop.pt
+```
+
+
+
+# DND DIALOGUE ACT RL EXPERIMENT COMMANDS
+
+## Maximize Self Points
+```
+CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python reinforce.py --cuda --data data/dia_act_doub_prop --bsz 16 --clip 1 --context_file data/dia_act_doub_prop/selfplay.txt --eps 0.0 --gamma 0.95 --lr 0.5 --momentum 0.1 --nepoch 4 --nesterov --ref_text data/dia_act_doub_prop/train.txt --rl_clip 1 --rl_lr 0.2 --score_threshold 6 --sv_train_freq 4 --temperature 0.5 --alice_model ../../logs/sv_model_dia_act_doub_prop.pt --bob_model ../../logs/sv_model_dia_act_doub_prop.pt --rw_type own_points --output_model_file ../../logs/rl_model_self_pts.pt
+
+CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python selfplay.py --alice_model_file ../../logs/rl_model_self_pts_rw_own_points.pt --bob_model_file ../../logs/sv_model_dia_act_doub_prop.pt --context_file data/dia_act_doub_prop/selfplay.txt --temperature 0.5 --ref_text data/dia_act_doub_prop/train.txt --log_file ../../logs/selfplay_rl_self_pts.log
+```
+
+## Maximize Partner Points
+```
+CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python reinforce.py --cuda --data data/dia_act_doub_prop --bsz 16 --clip 1 --context_file data/dia_act_doub_prop/selfplay.txt --eps 0.0 --gamma 0.95 --lr 0.5 --momentum 0.1 --nepoch 4 --nesterov --ref_text data/dia_act_doub_prop/train.txt --rl_clip 1 --rl_lr 0.2 --score_threshold 6 --sv_train_freq 4 --temperature 0.5 --alice_model ../../logs/sv_model_dia_act_doub_prop.pt --bob_model ../../logs/sv_model_dia_act_doub_prop.pt --rw_type partner_points --output_model_file ../../logs/rl_model_prtnr_pts.pt
+
+CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python selfplay.py --alice_model_file ../../logs/rl_model_prtnr_pts_rw_partner_points.pt --bob_model_file ../../logs/sv_model_dia_act_doub_prop.pt --context_file data/dia_act_doub_prop/selfplay.txt --temperature 0.5 --ref_text data/dia_act_doub_prop/train.txt --log_file ../../logs/selfplay_rl_prtnr_pts.log
+```
+
+## Maximize Combine50_50
+```
+CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python reinforce.py --cuda --data data/dia_act_doub_prop --bsz 16 --clip 1 --context_file data/dia_act_doub_prop/selfplay.txt --eps 0.0 --gamma 0.95 --lr 0.5 --momentum 0.1 --nepoch 4 --nesterov --ref_text data/dia_act_doub_prop/train.txt --rl_clip 1 --rl_lr 0.2 --score_threshold 6 --sv_train_freq 4 --temperature 0.5 --alice_model ../../logs/sv_model_dia_act_doub_prop.pt --bob_model ../../logs/sv_model_dia_act_doub_prop.pt --rw_type combine50_50 --output_model_file ../../logs/rl_model_5050_pts.pt
+
+CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python selfplay.py --alice_model_file ../../logs/rl_model_5050_pts_rw_combine50_50.pt --bob_model_file ../../logs/sv_model_dia_act_doub_prop.pt --context_file data/dia_act_doub_prop/selfplay.txt --temperature 0.5 --ref_text data/dia_act_doub_prop/train.txt --log_file ../../logs/selfplay_rl_5050_pts.log
 ```
 
 
 
 
 
-
-
-CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python train.py  --data data/dia_act_prop_both --cuda --bsz 16  --clip 0.5  --decay_every 1  --decay_rate 5.0  --dropout 0.5  --init_range 0.1  --lr 1  --max_epoch 30  --min_lr 0.01  --momentum 0.1  --nembed_ctx 64  --nembed_word 256  --nesterov  --nhid_attn 256  --nhid_ctx 64  --nhid_lang 128  --nhid_sel 256  --nhid_strat 128  --sel_weight 0.5  --model_file ../../logs/TESTING_MODEL.pt
-
-
-CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python selfplay.py --alice_model_file ../../logs/TESTING_MODEL.pt --bob_model_file ../../logs/TESTING_MODEL.pt --context_file data/dia_act_prop_both/selfplay.txt --temperature 0.5 --log_file ../../logs/TESTTEST.log --ref_text data/dia_act_prop_both/train.txt
-
-CUDA_LAUNCH_BLOCKING=1 CUDA_VISIBLE_DEVICES=0 python selfplay.py --alice_model_file ../../logs/dummy_model.pt --bob_model_file ../../logs/dummy_model.pt --context_file data/dia_act_prop_both/selfplay.txt --temperature 0.5 --log_file ../../logs/dummy_data_test.log --ref_text data/dia_act_prop_both/train.txt
 
 
 
