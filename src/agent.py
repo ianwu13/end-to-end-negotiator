@@ -140,7 +140,6 @@ class LstmAgent(Agent):
     def _choose(self, lang_hs=None, words=None, sample=False):
         # get all the possible choices
         choices = self.domain.generate_choices(self.context)
-        print(choices)  # TODO: REMOVE
         # concatenate the list of the hidden states into one tensor
         lang_hs = lang_hs if lang_hs is not None else torch.cat(self.lang_hs)
         # concatenate all the words into one tensor

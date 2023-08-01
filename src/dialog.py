@@ -211,6 +211,7 @@ class Dialog(object):
             curr += 1
 
         choices = []
+        print(conv)  # TODO: REMOVE TESTING
         if not self._is_selection(conv[-1]):
             # the conversation did not finish; assume disagreement.
             assert curr == max_utts, curr
@@ -237,8 +238,6 @@ class Dialog(object):
 
             # evaluate the choices, produce agreement and a reward
             agree, rewards = self.domain.score_choices(choices, ctxs, rw_type=self.rw_type, conf=self.conf)
-
-        # print(choices)  # TODO - TESTING, REMOVE
         
         if agree == -1 and rewards == -1:
             # this is neither an agreement, nor a disagreement - we don't know due to model failure.
