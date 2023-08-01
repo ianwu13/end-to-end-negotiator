@@ -157,7 +157,6 @@ class ObjectDivisionDomain(Domain):
         rw_type: type of the reward, as in config.rw_type
         conf: configuration in case the rw_type == "utility"
         """
-        print(choices)  # TODO - TESTING, REMOVE
         assert len(choices) == len(ctxs)
 
         if choices[0][0] == "<no_agreement>":
