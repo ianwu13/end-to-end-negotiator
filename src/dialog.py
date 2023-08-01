@@ -242,7 +242,11 @@ class Dialog(object):
         if agree == -1 and rewards == -1:
             # this is neither an agreement, nor a disagreement - we don't know due to model failure.
             # print("Failure mode. - agree and rewards are both None. Ignoring this case.")
-
+            
+            print(conv)  # TODO: REMOVE THESE, ALL 3 FOR TESTING
+            print('8'*80)
+            print(choices)
+            
             print("Failure")
 
             storage["agreement_status"] = "mismatch_failure" # the choices of the two agents were different, hence, the output is inconclusive.
