@@ -144,7 +144,7 @@ class Dialog(object):
         self.metrics.register_ngram('full_match', text=ref_text)
 
     def _is_selection(self, out):
-        return len(out) == 1 and out[0] == '<selection>'
+        return (len(out) == 1 and out[0] == '<selection>') or (len(out) == 2 and out[0] == '<selection>' and out[1] == '<eos>')
 
     def show_metrics(self):
         return ' '.join(['%s=%s' % (k, v) for k, v in self.metrics.dict().items()])
