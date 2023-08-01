@@ -211,7 +211,7 @@ class Dialog(object):
             curr += 1
 
         choices = []
-        print(conv)  # TODO: REMOVE TESTING
+        
         if not self._is_selection(conv[-1]):
             # the conversation did not finish; assume disagreement.
             assert curr == max_utts, curr
