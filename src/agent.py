@@ -152,11 +152,6 @@ class LstmAgent(Agent):
         for i in range(self.domain.selection_length()):
             idxs = [self.model.item_dict.get_idx(c[i]) for c in choices]
 
-            # print(choices)
-            # print(self.model.item_dict.word2idx)
-            # print(idxs)
-            # exit()
-            
             idxs = Variable(torch.from_numpy(np.array(idxs)))
             idxs = self.model.to_device(idxs)
             choices_logits.append(torch.gather(logits[i], 0, idxs).unsqueeze(1))
