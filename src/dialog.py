@@ -144,7 +144,7 @@ class Dialog(object):
         self.metrics.register_ngram('full_match', text=ref_text)
 
     def _is_selection(self, out):
-        return len(out) == 1 and out[0] == '<selection>'
+        return (len(out) == 1 and out[0] == '<selection>') or (len(out) == 2 and out[0] == '<selection>' and out[1] == '<eos>')
 
     def show_metrics(self):
         return ' '.join(['%s=%s' % (k, v) for k, v in self.metrics.dict().items()])
@@ -211,6 +211,7 @@ class Dialog(object):
             curr += 1
 
         choices = []
+        
         if not self._is_selection(conv[-1]):
             # the conversation did not finish; assume disagreement.
             assert curr == max_utts, curr
@@ -241,6 +242,11 @@ class Dialog(object):
         if agree == -1 and rewards == -1:
             # this is neither an agreement, nor a disagreement - we don't know due to model failure.
             # print("Failure mode. - agree and rewards are both None. Ignoring this case.")
+            
+            print(conv)  # TODO: REMOVE THESE, ALL 3 FOR TESTING
+            print('8'*80)
+            print(choices)
+            
             print("Failure")
 
             storage["agreement_status"] = "mismatch_failure" # the choices of the two agents were different, hence, the output is inconclusive.
@@ -249,6 +255,7 @@ class Dialog(object):
         if not agree:
             # this is disagreement between the two.
             # print("Disagreement between the two models.")
+
             print("Disagreement")
             if not storage["agreement_status"]:
                 # there is no agreement, which is not of type len.hence, it is of type wa.
