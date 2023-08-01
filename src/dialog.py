@@ -250,6 +250,10 @@ class Dialog(object):
         if not agree:
             # this is disagreement between the two.
             # print("Disagreement between the two models.")
+            print(conv)  # TODO: REMOVE THESE, ALL 3 FOR TESTING
+            print('8'*80)
+            print(choices)
+
             print("Disagreement")
             if not storage["agreement_status"]:
                 # there is no agreement, which is not of type len.hence, it is of type wa.
