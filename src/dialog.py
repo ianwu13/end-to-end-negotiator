@@ -245,6 +245,7 @@ class Dialog(object):
             print(conv)  # TODO: REMOVE THESE, ALL 3 FOR TESTING
             print('8'*80)
             print(choices)
+            
             print("Failure")
 
             storage["agreement_status"] = "mismatch_failure" # the choices of the two agents were different, hence, the output is inconclusive.
