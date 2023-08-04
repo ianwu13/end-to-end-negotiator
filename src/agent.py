@@ -84,12 +84,7 @@ class LstmAgent(Agent):
         inpt: is a list of strings.
         dictionary: prebuild mapping, see Dictionary in data.py
         """
-        try:
-            encoded = torch.LongTensor(dictionary.w2i(inpt)).unsqueeze(1)
-        except:
-            print(dictionary.word2idx)
-            print(inpt)
-            exit()
+        encoded = torch.LongTensor(dictionary.w2i(inpt)).unsqueeze(1)
         
         if torch.cuda.is_available():
             if self.model.device_id is not None:
@@ -111,9 +106,6 @@ class LstmAgent(Agent):
         self.words = []
         self.context = context
         # encoded context
-        print('test')
-        print(context, self.model.context_dict.word2idx)
-        print('test')
         self.ctx = self._encode(context, self.model.context_dict)
         # hidded state of context
         self.ctx_h = self.model.forward_context(Variable(self.ctx))
@@ -159,11 +151,6 @@ class LstmAgent(Agent):
         choices_logits = []
         for i in range(self.domain.selection_length()):
             idxs = [self.model.item_dict.get_idx(c[i]) for c in choices]
-
-            # print('a')
-            # print(self.model.item_dict.word2idx)
-            # print(idxs)
-            # print('a')
 
             idxs = Variable(torch.from_numpy(np.array(idxs)))
             idxs = self.model.to_device(idxs)
