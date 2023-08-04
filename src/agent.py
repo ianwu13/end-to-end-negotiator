@@ -87,7 +87,7 @@ class LstmAgent(Agent):
         try:
             encoded = torch.LongTensor(dictionary.w2i(inpt)).unsqueeze(1)
         except:
-            print(dictionary)
+            print(dictionary.word2idx)
             print(inpt)
             exit()
         
@@ -156,6 +156,9 @@ class LstmAgent(Agent):
         choices_logits = []
         for i in range(self.domain.selection_length()):
             idxs = [self.model.item_dict.get_idx(c[i]) for c in choices]
+
+            print(self.model.item_dict.word2idx)
+            print(idxs)
 
             idxs = Variable(torch.from_numpy(np.array(idxs)))
             idxs = self.model.to_device(idxs)
