@@ -111,6 +111,9 @@ class LstmAgent(Agent):
         self.words = []
         self.context = context
         # encoded context
+        print('test')
+        print(context, self.model.context_dict)
+        print('test')
         self.ctx = self._encode(context, self.model.context_dict)
         # hidded state of context
         self.ctx_h = self.model.forward_context(Variable(self.ctx))
@@ -157,8 +160,10 @@ class LstmAgent(Agent):
         for i in range(self.domain.selection_length()):
             idxs = [self.model.item_dict.get_idx(c[i]) for c in choices]
 
-            print(self.model.item_dict.word2idx)
-            print(idxs)
+            # print('a')
+            # print(self.model.item_dict.word2idx)
+            # print(idxs)
+            # print('a')
 
             idxs = Variable(torch.from_numpy(np.array(idxs)))
             idxs = self.model.to_device(idxs)
