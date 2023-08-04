@@ -112,7 +112,7 @@ class LstmAgent(Agent):
         self.context = context
         # encoded context
         print('test')
-        print(context, self.model.context_dict)
+        print(context, self.model.context_dict.word2idx)
         print('test')
         self.ctx = self._encode(context, self.model.context_dict)
         # hidded state of context

@@ -68,6 +68,10 @@ class Dictionary(object):
         if word not in self.word2idx:
             self.word2idx[word] = len(self.idx2word)
             self.idx2word.append(word)
+
+        self.word2idx['<unk>'] = len(self.idx2word)
+        self.idx2word.append('<unk>')
+
         return self.word2idx[word]
 
     def i2w(self, idx):
