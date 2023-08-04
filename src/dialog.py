@@ -255,6 +255,7 @@ class Dialog(object):
         if not agree:
             # this is disagreement between the two.
             # print("Disagreement between the two models.")
+            print(choices)
 
             print("Disagreement")
             if not storage["agreement_status"]:
