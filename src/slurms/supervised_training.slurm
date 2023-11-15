@@ -1,10 +1,12 @@
 #!/bin/bash
 #SBATCH --partition=gpu
-#SBATCH --gres=gpu:a100:1
+#SBATCH --gres=gpu:v100:1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=16
-#SBATCH --time=1:00:00
+#SBATCH --time=00:30:00
 #SBATCH --account=glucas_540
+
+#SBATCH --output=R-%x.%j.out
 
 cd ..
 

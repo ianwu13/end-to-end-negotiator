@@ -16,4 +16,4 @@ eval "$(conda shell.bash hook)"
 conda activate e2e
 
 # Run script
-python3 selfplay.py --alice_model_file models/model_files/casino_custformat_supervised_30ep.pt --bob_model_file models/model_files/casino_custform_rl_selfish_4ep_rw_own_points.pt --context_file data/final_casino_custformat_valid/selfplay.txt --log_file ../logs/casino_sv_selfish.txt
+python3 selfplay.py --alice_model_file models/model_files/casino_custformat_supervised_30ep.pt --bob_model_file models/model_files/casino_custform_rl_selfish_4ep_rw_own_points.pt --context_file data/final_casino_custformat_valid --log_file ../logs/casino_sv_selfish.txt
